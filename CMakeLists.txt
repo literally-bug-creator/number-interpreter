@@ -12,6 +12,11 @@ if(PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
     option(BUILD_BENCHMARKS "Build benchmarks" ON)
     option(BUILD_EXAMPLE "Build example application" ON)
 
+    if(BUILD_TESTS)
+        enable_testing()
+        add_subdirectory(tests)
+    endif()
+
     if(BUILD_BENCHMARKS)
         add_subdirectory(benchmarks)
     endif()
