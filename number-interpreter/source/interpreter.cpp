@@ -1,4 +1,4 @@
-#include "interpreter/interpreter.hpp"
+#include "interpreter.hpp"
 
 std::vector<Token> tokenize( const std::string& str ) {
     std::vector<Token> tokens( str.size() );

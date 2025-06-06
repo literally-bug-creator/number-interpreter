@@ -1,6 +1,6 @@
-#include "interpreter/sign.hpp"
+#include "sign.hpp"
 
-#include "interpreter/logical.hpp"
+#include "logical.hpp"
 
 bool PlusExpression::interpret( Context& context ) const {
     if ( context.is_finished() ) return false;

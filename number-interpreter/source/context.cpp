@@ -1,4 +1,4 @@
-#include "interpreter/context.hpp"
+#include "context.hpp"
 
 #include <cstddef>
 #include <stdexcept>

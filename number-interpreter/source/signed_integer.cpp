@@ -1,6 +1,6 @@
-#include "interpreter/signed_integer.hpp"
+#include "signed_integer.hpp"
 
-#include "interpreter/logical.hpp"
+#include "logical.hpp"
 
 bool ZeroExpression::interpret( Context& context ) const {
     if ( context.is_finished() ) return false;

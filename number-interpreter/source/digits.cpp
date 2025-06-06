@@ -1,4 +1,4 @@
-#include "interpreter/digits.hpp"
+#include "digits.hpp"
 
 bool DigitExpression::interpret( Context& context ) const {
     if ( context.is_finished() ) return false;

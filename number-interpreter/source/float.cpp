@@ -1,4 +1,4 @@
-#include "interpreter/float.hpp"
+#include "float.hpp"
 
 bool DotExpression::interpret( Context& context ) const {
     if ( context.is_finished() ) return false;

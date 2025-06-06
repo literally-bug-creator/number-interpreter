@@ -1,4 +1,4 @@
-#include "interpreter/exponent.hpp"
+#include "exponent.hpp"
 
 bool ExpExpression::interpret( Context& context ) const {
     if ( context.is_finished() ) return false;

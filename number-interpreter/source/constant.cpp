@@ -1,6 +1,6 @@
-#include "interpreter/constant.hpp"
+#include "constant.hpp"
 
-#include "interpreter/logical.hpp"
+#include "logical.hpp"
 
 bool InfExpression::interpret( Context& context ) const {
     if ( context.is_finished() ) return false;

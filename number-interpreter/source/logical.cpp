@@ -1,4 +1,4 @@
-#include "interpreter/logical.hpp"
+#include "logical.hpp"
 
 AndExpression::AndExpression( const Expression& left, const Expression& right ):
     left( left ), right( right ) {};
