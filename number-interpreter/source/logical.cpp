@@ -1,22 +1,27 @@
 #include "logical.hpp"
 
-AndExpression::AndExpression( const Expression& left, const Expression& right ):
-    left( left ), right( right ) {};
+namespace number_interpreter {
+    AndExpression::AndExpression( const Expression& left,
+                                  const Expression& right ):
+        left( left ), right( right ) {};
 
-bool AndExpression::interpret( Context& context ) const {
-    ContextImage dump = context.dump();
+    bool AndExpression::interpret( Context& context ) const {
+        ContextImage dump = context.dump();
 
-    if ( left.interpret( context ) && right.interpret( context ) ) {
-        return true;
+        if ( left.interpret( context ) && right.interpret( context ) ) {
+            return true;
+        }
+
+        context.restore( dump );
+        return false;
     }
 
-    context.restore( dump );
-    return false;
-}
+    OrExpression::OrExpression( const Expression& left,
+                                const Expression& right ):
+        left( left ), right( right ) {};
 
-OrExpression::OrExpression( const Expression& left, const Expression& right ):
-    left( left ), right( right ) {};
+    bool OrExpression::interpret( Context& context ) const {
+        return left.interpret( context ) || right.interpret( context );
+    }
 
-bool OrExpression::interpret( Context& context ) const {
-    return left.interpret( context ) || right.interpret( context );
 }
