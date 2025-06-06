@@ -13,7 +13,7 @@ if(PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
     option(BUILD_EXAMPLE "Build example application" ON)
 
     if(BUILD_BENCHMARKS)
-        add_subdirectory(benchmark)
+        add_subdirectory(benchmarks)
     endif()
 
     if(BUILD_EXAMPLE)
