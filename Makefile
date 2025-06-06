@@ -19,7 +19,7 @@ test:
 
 
 benchmark:
-	@./$(BUILD_DIR)/benchmark/run_benchmark --benchmark_time_unit=ms
+	@./$(BUILD_DIR)/benchmarks/run_benchmark --benchmark_time_unit=ms
 
 
 clean:
