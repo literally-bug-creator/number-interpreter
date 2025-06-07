@@ -73,7 +73,7 @@ namespace number_interpreter {
         Context( std::vector<Token> tokens );
 
         size_t size() const;
-        size_t get_tokens_amount() const;
+        size_t get_remaining_tokens_amount() const;
         ContextImage dump();
         void restore( ContextImage& dump );
         bool is_finished() const;
