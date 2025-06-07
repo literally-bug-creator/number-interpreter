@@ -14,7 +14,9 @@ namespace number_interpreter {
     bool Interpreter::interpret( const std::string& str ) const {
         Context context = Context( tokenize( str ) );
 
-        if ( const_exp.interpret( context ) ) { return true; }
+        if ( const_exp.interpret( context ) ) {
+            return true && context.is_finished();
+        }
 
         return float_exp.interpret( context ) && context.is_finished();
     }

@@ -96,8 +96,8 @@ namespace number_interpreter {
         return make_view( tokens, index, length );
     }
 
-    size_t Context::get_tokens_amount() const {
-        return size() - ( index + 1 );
+    size_t Context::get_remaining_tokens_amount() const {
+        return size() - std::min( index, size() );
     };
 
     void Context::next( size_t length ) { index += length; }

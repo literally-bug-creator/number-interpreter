@@ -5,7 +5,7 @@
 namespace number_interpreter {
     bool InfExpression::interpret( Context& context ) const {
         if ( context.is_finished() ) return false;
-        if ( context.get_tokens_amount() < inf.size() ) return false;
+        if ( context.get_remaining_tokens_amount() < inf.size() ) return false;
 
         TokenSequenceView view = context.get_tokens( inf.size() );
         if ( view == inf ) {
@@ -18,7 +18,7 @@ namespace number_interpreter {
 
     bool NanExpression::interpret( Context& context ) const {
         if ( context.is_finished() ) return false;
-        if ( context.get_tokens_amount() < nan.size() ) return false;
+        if ( context.get_remaining_tokens_amount() < nan.size() ) return false;
 
         TokenSequenceView view = context.get_tokens( nan.size() );
         if ( view == nan ) {
