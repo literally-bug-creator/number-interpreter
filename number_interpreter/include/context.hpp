@@ -6,13 +6,28 @@
 
 using std::string;
 
+class ContextImage {
+  public:
+    explicit ContextImage(size_t index, string exp, string sign,
+                          string afterDot, string beforeDot);
+
+  private:
+    size_t index_;
+    string exp_;
+    string sign_;
+    string afterDot_;
+    string beforeDot_;
+
+    friend class Context;
+};
+
 class Context {
   public:
     explicit Context(string str);
 
+    [[nodiscard]] char get() const;
     [[nodiscard]] bool isFinished() const;
-    [[nodiscard]] size_t getCurrentIndex() const;
-    [[nodiscard]] string get(size_t index) const;
+    [[nodiscard]] ContextImage backup() const;
     [[nodiscard]] NumberParts buildNumberParts() const;
 
     void next();
@@ -20,6 +35,7 @@ class Context {
     void setSign(string sign);
     void setAfterDot(string afterDot);
     void setBeforeDot(string beforeDot);
+    void restore(const ContextImage& img);
 
   private:
     string str_;
