@@ -4,6 +4,7 @@
 
 #include "number_parts.hpp"
 
+namespace number_interpreter {
 using std::string;
 
 class ContextImage {
@@ -45,3 +46,4 @@ class Context {
     string afterDot_;
     string beforeDot_;
 };
+}  // namespace number_interpreter

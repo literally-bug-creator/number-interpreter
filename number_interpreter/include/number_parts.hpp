@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+namespace number_interpreter {
 using std::string;
 using Exponent = uint64_t;
 using Digits = std::vector<uint8_t>;
@@ -21,3 +22,4 @@ class NumberParts {
     bool isNegative_;
     Digits significantDigits_;
 };
+}  // namespace number_interpreter
