@@ -132,7 +132,7 @@ TEST_F(ContextTest, SetBeforeDot) {
     context.setBeforeDot("123");
     NumberParts parts = context.buildNumberParts();
 
-    EXPECT_NO_THROW(parts.getSignificantDigits());
+    EXPECT_NO_THROW(parts.getSignificantDigits());  // NOLINT
 }
 
 TEST_F(ContextTest, SetAfterDot) {
@@ -141,7 +141,7 @@ TEST_F(ContextTest, SetAfterDot) {
     context.setAfterDot("456");
     NumberParts parts = context.buildNumberParts();
 
-    EXPECT_NO_THROW(parts.getSignificantDigits());
+    EXPECT_NO_THROW(parts.getSignificantDigits());  // NOLINT
 }
 
 TEST_F(ContextTest, SetExp) {
@@ -150,7 +150,7 @@ TEST_F(ContextTest, SetExp) {
     context.setExp("10");
     NumberParts parts = context.buildNumberParts();
 
-    EXPECT_NO_THROW(parts.getExponent());
+    EXPECT_NO_THROW(parts.getExponent());  // NOLINT
 }
 
 TEST_F(ContextTest, BuildEmptyNumberParts) {
@@ -261,7 +261,7 @@ TEST_F(ContextTest, EmptyStringOperations) {
     bool expectedFinished = true;
 
     EXPECT_EQ(expectedFinished, context.isFinished());
-    EXPECT_THROW(context.get(1), std::out_of_range); // NOLINT
+    EXPECT_THROW(context.get(1), std::out_of_range);  // NOLINT
 }
 
 TEST_F(ContextTest, SingleCharacterString) {

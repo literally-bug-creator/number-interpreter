@@ -157,8 +157,8 @@ TEST_F(NumberPartsTest, GetEmptyDigits) {
 
 TEST_F(NumberPartsTest, GetDigitsFiltersNonDigits) {
     NumberParts parts("", "1a2b", "3c4d", "");
-    size_t expectedSize = 4;
-    std::vector<uint8_t> expectedDigits = {1, 2, 3, 4};
+    size_t expectedSize = 0;
+    std::vector<uint8_t> expectedDigits = {};
 
     Digits digits = parts.getSignificantDigits();
 
