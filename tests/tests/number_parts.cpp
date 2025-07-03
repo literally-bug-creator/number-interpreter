@@ -2,7 +2,8 @@
 
 #include <gtest/gtest.h>
 
-namespace number_interpreter {
+using namespace number_interpreter;
+
 class NumberPartsTest : public ::testing::Test {};
 
 TEST_F(NumberPartsTest, EmptyStringsConstructor) {
@@ -277,4 +278,3 @@ TEST_F(NumberPartsTest, ExponentParsesValidPrefix) {
 
     EXPECT_EQ(expected, exp);
 }
-}  // namespace number_interpreter

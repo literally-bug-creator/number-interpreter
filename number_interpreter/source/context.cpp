@@ -37,7 +37,7 @@ string Context::get(size_t length) const {
 }
 
 NumberParts Context::buildNumberParts() const {
-    return {sign_, beforeDot_, afterDot_, exp_};
+    return NumberParts(sign_, beforeDot_, afterDot_, exp_);
 }
 
 void Context::next(size_t length) {

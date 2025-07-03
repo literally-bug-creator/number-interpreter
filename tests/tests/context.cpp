@@ -1,3 +1,5 @@
+#pragma clang diagnostic ignored "-Wunused-result"
+
 #include "context.hpp"
 
 #include <stdexcept>
@@ -6,7 +8,7 @@
 
 #include "number_parts.hpp"
 
-namespace number_interpreter {
+using namespace number_interpreter;
 
 class ContextTest : public ::testing::Test {};
 
@@ -78,14 +80,14 @@ TEST_F(ContextTest, GetFromMiddle) {
 TEST_F(ContextTest, GetThrowsOutOfRange) {
     Context context("hi");
 
-    EXPECT_THROW(context.get(3), std::out_of_range);  // NOLINT
+    EXPECT_THROW(context.get(3), std::out_of_range);
 }
 
 TEST_F(ContextTest, GetThrowsWhenFinished) {
     Context context("hi");
     context.next(2);
 
-    EXPECT_THROW(context.get(1), std::out_of_range);  // NOLINT
+    EXPECT_THROW(context.get(1), std::out_of_range);
 }
 
 TEST_F(ContextTest, NextMovesForward) {
@@ -132,7 +134,7 @@ TEST_F(ContextTest, SetBeforeDot) {
     context.setBeforeDot("123");
     NumberParts parts = context.buildNumberParts();
 
-    EXPECT_NO_THROW(parts.getSignificantDigits());  // NOLINT
+    EXPECT_NO_THROW(parts.getSignificantDigits());
 }
 
 TEST_F(ContextTest, SetAfterDot) {
@@ -141,7 +143,7 @@ TEST_F(ContextTest, SetAfterDot) {
     context.setAfterDot("456");
     NumberParts parts = context.buildNumberParts();
 
-    EXPECT_NO_THROW(parts.getSignificantDigits());  // NOLINT
+    EXPECT_NO_THROW(parts.getSignificantDigits());
 }
 
 TEST_F(ContextTest, SetExp) {
@@ -150,7 +152,7 @@ TEST_F(ContextTest, SetExp) {
     context.setExp("10");
     NumberParts parts = context.buildNumberParts();
 
-    EXPECT_NO_THROW(parts.getExponent());  // NOLINT
+    EXPECT_NO_THROW(parts.getExponent());
 }
 
 TEST_F(ContextTest, BuildEmptyNumberParts) {
@@ -261,7 +263,7 @@ TEST_F(ContextTest, EmptyStringOperations) {
     bool expectedFinished = true;
 
     EXPECT_EQ(expectedFinished, context.isFinished());
-    EXPECT_THROW(context.get(1), std::out_of_range);  // NOLINT
+    EXPECT_THROW(context.get(1), std::out_of_range);
 }
 
 TEST_F(ContextTest, SingleCharacterString) {
@@ -275,4 +277,3 @@ TEST_F(ContextTest, SingleCharacterString) {
     context.next(1);
     EXPECT_EQ(expectedFinalFinished, context.isFinished());
 }
-}  // namespace number_interpreter
