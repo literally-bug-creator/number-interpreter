@@ -11,8 +11,8 @@ using Digits = std::vector<uint8_t>;
 
 class NumberParts {
   public:
-    NumberParts(const string& sign, const string& beforeDot,
-                const string& afterDot, const string& exp);
+    explicit NumberParts(const string& sign, const string& beforeDot,
+                         const string& afterDot, const string& exp);
 
     [[nodiscard]] bool isNegative() const;
     [[nodiscard]] Exponent getExponent() const;
