@@ -17,9 +17,9 @@ bool isOutOfRange(size_t index, size_t length, const string& str) {
 ContextImage::ContextImage(size_t index, string exp, string sign,
                            string afterDot, string beforeDot)
     : index_(index), exp_(std::move(exp)), sign_(std::move(sign)),
-      afterDot_(std::move(afterDot)), beforeDot_(std::move(beforeDot)) {};
+      afterDot_(std::move(afterDot)), beforeDot_(std::move(beforeDot)) {}
 
-Context::Context(string str) : str_(std::move(str)), index_(0) {};
+Context::Context(string str) : str_(std::move(str)), index_(0) {}
 
 bool Context::isFinished() const {
     return index_ >= str_.size();
