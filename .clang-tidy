@@ -29,7 +29,7 @@ WarningsAsErrors: >
   portability-*,
   readability-*
 
-HeaderFilterRegex: '(big_unsigned_int|tests|benchmarks)/(?!.*third-party).*\.(h|hpp)$'
+HeaderFilterRegex: '(number_interpreter|tests|benchmarks)/(?!.*third-party).*\.(h|hpp)$'
 
 CheckOptions:
   - key: readability-identifier-naming.NamespaceCase
