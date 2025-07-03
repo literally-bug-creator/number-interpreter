@@ -19,9 +19,10 @@ unsigned_number = integer_part [ fractional_part ] [ exponent_part ]
 
 exponent_part = exp [ sign ] integer_part ;
 fractional_part = dot digit { digit } ;
-integer_part = zero | non_zero_digit { digit } ;
+integer_part = zero | ( non_zero_digit { digit } ) ;
 
-digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+digit = zero | non_zero_digit ;
+
 non_zero_digit = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 zero = "0" ;
 
