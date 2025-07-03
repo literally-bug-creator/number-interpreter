@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+
 #include "number_parts.hpp"
 namespace number_interpreter {
 class NumberInterpreter {
