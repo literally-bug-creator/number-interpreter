@@ -13,7 +13,7 @@ IndentWrappedFunctionNames: false
 AccessModifierOffset: -2
 
 # Line length and breaks
-ColumnLimit: 100
+ColumnLimit: 80
 BreakBeforeBraces: Attach
 BreakConstructorInitializers: BeforeColon
 BreakInheritanceList: BeforeColon
