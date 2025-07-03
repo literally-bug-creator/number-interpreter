@@ -10,32 +10,44 @@ bool parseSign(const string& str) {
     return !str.empty() && str == "-";
 }
 
-bool isNumericString(const string& str) {
-    if (str.empty()) {
-        return false;
+Digits parseDigitString(const string& str) {
+    Digits digits;
+    digits.reserve(str.size());
+    for (char letter : str) {
+        if (std::isdigit(letter) == 0) {
+            return {};
+        }
+        digits.push_back(static_cast<uint8_t>(letter - '0'));
     }
-    return std::ranges::all_of(
-        str, [](char letter) { return std::isdigit(letter) != 0; });
+    return digits;
 }
 
 Exponent parseExponent(const string& str) {
-    if (!isNumericString(str)) {
+    if (str.empty() || !std::ranges::all_of(str, [](char letter) {
+            return std::isdigit(letter) != 0;
+        })) {
         return 0;
     }
     return std::stoull(str);
 }
 
 Digits parseSignificantDigits(const string& beforeDot, const string& afterDot) {
-    string allDigits = beforeDot + afterDot;
-    if (!isNumericString(allDigits)) {
+    Digits beforeDigits = parseDigitString(beforeDot);
+    if (beforeDigits.empty() && !beforeDot.empty()) {
         return {};
     }
-    Digits significantDigits;
-    significantDigits.reserve(allDigits.size());
-    for (char letter : allDigits) {
-        significantDigits.push_back(static_cast<uint8_t>(letter - '0'));
+
+    Digits afterDigits = parseDigitString(afterDot);
+    if (afterDigits.empty() && !afterDot.empty()) {
+        return {};
     }
-    return significantDigits;
+
+    beforeDigits.reserve(beforeDigits.size() + afterDigits.size());
+    beforeDigits.insert(beforeDigits.end(),
+                        std::make_move_iterator(afterDigits.begin()),
+                        std::make_move_iterator(afterDigits.end()));
+
+    return beforeDigits;
 }
 }  // namespace
 
