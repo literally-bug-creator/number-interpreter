@@ -26,12 +26,12 @@ class Context {
   public:
     explicit Context(string str);
 
-    [[nodiscard]] char get() const;
     [[nodiscard]] bool isFinished() const;
     [[nodiscard]] ContextImage backup() const;
+    [[nodiscard]] string get(size_t length) const;
     [[nodiscard]] NumberParts buildNumberParts() const;
 
-    void next();
+    void next(size_t length);
     void setExp(string exp);
     void setSign(string sign);
     void setAfterDot(string afterDot);
