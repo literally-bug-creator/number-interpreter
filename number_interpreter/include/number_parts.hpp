@@ -11,11 +11,12 @@ using Digits = std::vector<uint8_t>;
 
 class NumberParts {
   public:
-    NumberParts(string sign, string beforeDot, string afterDot, string exp);
+    NumberParts(const string& sign, const string& beforeDot,
+                const string& afterDot, const string& exp);
 
-    bool isNegative();
-    Exponent getExponent();
-    Digits getSignificantDigits();
+    [[nodiscard]] bool isNegative() const;
+    [[nodiscard]] Exponent getExponent() const;
+    [[nodiscard]] Digits getSignificantDigits() const;
 
   private:
     Exponent exp_;
