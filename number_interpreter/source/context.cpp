@@ -10,7 +10,7 @@ namespace {
 constexpr string OUT_OF_RANGE_MSG = "Out of context.";
 
 bool isOutOfRange(size_t index, size_t length, const string& str) {
-    return (index + length) >= str.size();
+    return (index + length) > str.size();
 }
 }  // namespace
 
