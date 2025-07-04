@@ -15,6 +15,7 @@ TEST_F(InfinityExpressionTest, InterpretInfLowercase) {
 
     EXPECT_EQ("inf", result.getValue());
     EXPECT_FALSE(result.isEmpty());
+    EXPECT_TRUE(context.isFinished());
 }
 
 TEST_F(InfinityExpressionTest, InterpretInfUppercase) {
@@ -22,8 +23,8 @@ TEST_F(InfinityExpressionTest, InterpretInfUppercase) {
     InfinityExpression expression;
     Token result = expression.interpret(context);
 
-    EXPECT_EQ("", result.getValue());
     EXPECT_TRUE(result.isEmpty());
+    EXPECT_FALSE(context.isFinished());
 }
 
 TEST_F(InfinityExpressionTest, InterpretInfinityFull) {
@@ -33,6 +34,7 @@ TEST_F(InfinityExpressionTest, InterpretInfinityFull) {
 
     EXPECT_EQ("inf", result.getValue());
     EXPECT_FALSE(result.isEmpty());
+    EXPECT_FALSE(context.isFinished());
 }
 
 TEST_F(InfinityExpressionTest, InterpretInvalidInput) {
@@ -42,6 +44,7 @@ TEST_F(InfinityExpressionTest, InterpretInvalidInput) {
 
     EXPECT_EQ("", result.getValue());
     EXPECT_TRUE(result.isEmpty());
+    EXPECT_EQ("abc", context.get(3));
 }
 
 TEST_F(InfinityExpressionTest, InterpretIncomplete) {
@@ -51,6 +54,7 @@ TEST_F(InfinityExpressionTest, InterpretIncomplete) {
 
     EXPECT_EQ("", result.getValue());
     EXPECT_TRUE(result.isEmpty());
+    EXPECT_EQ("in", context.get(2));
 }
 
 TEST_F(InfinityExpressionTest, InterpretEmptyString) {
@@ -58,6 +62,6 @@ TEST_F(InfinityExpressionTest, InterpretEmptyString) {
     InfinityExpression expression;
     Token result = expression.interpret(context);
 
-    EXPECT_EQ("", result.getValue());
     EXPECT_TRUE(result.isEmpty());
+    EXPECT_TRUE(context.isFinished());
 }

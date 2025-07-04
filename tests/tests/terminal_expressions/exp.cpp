@@ -15,6 +15,7 @@ TEST_F(ExpExpressionTest, InterpretLowercaseE) {
 
     EXPECT_EQ("e", result.getValue());
     EXPECT_FALSE(result.isEmpty());
+    EXPECT_TRUE(context.isFinished());
 }
 
 TEST_F(ExpExpressionTest, InterpretUppercaseE) {
@@ -22,8 +23,8 @@ TEST_F(ExpExpressionTest, InterpretUppercaseE) {
     ExpExpression expression;
     Token result = expression.interpret(context);
 
-    EXPECT_EQ("", result.getValue());
     EXPECT_TRUE(result.isEmpty());
+    EXPECT_TRUE(!context.isFinished());
 }
 
 TEST_F(ExpExpressionTest, InterpretInvalidInput) {
@@ -31,8 +32,8 @@ TEST_F(ExpExpressionTest, InterpretInvalidInput) {
     ExpExpression expression;
     Token result = expression.interpret(context);
 
-    EXPECT_EQ("", result.getValue());
     EXPECT_TRUE(result.isEmpty());
+    EXPECT_EQ("x", context.get(1));
 }
 
 TEST_F(ExpExpressionTest, InterpretWithFollowingCharacters) {
@@ -42,6 +43,7 @@ TEST_F(ExpExpressionTest, InterpretWithFollowingCharacters) {
 
     EXPECT_EQ("e", result.getValue());
     EXPECT_FALSE(result.isEmpty());
+    EXPECT_EQ("123", context.get(3));
 }
 
 TEST_F(ExpExpressionTest, InterpretEmptyString) {
@@ -49,6 +51,6 @@ TEST_F(ExpExpressionTest, InterpretEmptyString) {
     ExpExpression expression;
     Token result = expression.interpret(context);
 
-    EXPECT_EQ("", result.getValue());
     EXPECT_TRUE(result.isEmpty());
+    EXPECT_TRUE(context.isFinished());
 }

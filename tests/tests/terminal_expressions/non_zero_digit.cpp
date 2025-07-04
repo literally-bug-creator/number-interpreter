@@ -16,6 +16,7 @@ TEST_F(NonZeroDigitExpressionTest, InterpretValidDigits) {
 
         EXPECT_EQ(string(1, digit), result.getValue());
         EXPECT_FALSE(result.isEmpty());
+        EXPECT_TRUE(context.isFinished());
     }
 }
 
@@ -26,6 +27,7 @@ TEST_F(NonZeroDigitExpressionTest, InterpretZero) {
 
     EXPECT_EQ("", result.getValue());
     EXPECT_TRUE(result.isEmpty());
+    EXPECT_EQ("0", context.get(1));
 }
 
 TEST_F(NonZeroDigitExpressionTest, InterpretInvalidInput) {
@@ -35,6 +37,7 @@ TEST_F(NonZeroDigitExpressionTest, InterpretInvalidInput) {
 
     EXPECT_EQ("", result.getValue());
     EXPECT_TRUE(result.isEmpty());
+    EXPECT_EQ("a", context.get(1));
 }
 
 TEST_F(NonZeroDigitExpressionTest, InterpretWithFollowingCharacters) {
@@ -44,6 +47,7 @@ TEST_F(NonZeroDigitExpressionTest, InterpretWithFollowingCharacters) {
 
     EXPECT_EQ("5", result.getValue());
     EXPECT_FALSE(result.isEmpty());
+    EXPECT_EQ("abc", context.get(3));
 }
 
 TEST_F(NonZeroDigitExpressionTest, InterpretEmptyString) {
@@ -51,6 +55,6 @@ TEST_F(NonZeroDigitExpressionTest, InterpretEmptyString) {
     NonZeroDigitExpression expression;
     Token result = expression.interpret(context);
 
-    EXPECT_EQ("", result.getValue());
     EXPECT_TRUE(result.isEmpty());
+    EXPECT_TRUE(context.isFinished());
 }

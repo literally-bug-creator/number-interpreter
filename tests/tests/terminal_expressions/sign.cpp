@@ -15,6 +15,7 @@ TEST_F(SignExpressionTest, InterpretPlusSign) {
 
     EXPECT_EQ("+", result.getValue());
     EXPECT_FALSE(result.isEmpty());
+    EXPECT_TRUE(context.isFinished());
 }
 
 TEST_F(SignExpressionTest, InterpretMinusSign) {
@@ -24,6 +25,7 @@ TEST_F(SignExpressionTest, InterpretMinusSign) {
 
     EXPECT_EQ("-", result.getValue());
     EXPECT_FALSE(result.isEmpty());
+    EXPECT_TRUE(context.isFinished());
 }
 
 TEST_F(SignExpressionTest, InterpretInvalidInput) {
@@ -33,6 +35,7 @@ TEST_F(SignExpressionTest, InterpretInvalidInput) {
 
     EXPECT_EQ("", result.getValue());
     EXPECT_TRUE(result.isEmpty());
+    EXPECT_EQ("x", context.get(1));
 }
 
 TEST_F(SignExpressionTest, InterpretWithFollowingCharacters) {
@@ -42,6 +45,7 @@ TEST_F(SignExpressionTest, InterpretWithFollowingCharacters) {
 
     EXPECT_EQ("+", result.getValue());
     EXPECT_FALSE(result.isEmpty());
+    EXPECT_EQ("123", context.get(3));
 }
 
 TEST_F(SignExpressionTest, InterpretEmptyString) {
@@ -49,6 +53,6 @@ TEST_F(SignExpressionTest, InterpretEmptyString) {
     SignExpression expression;
     Token result = expression.interpret(context);
 
-    EXPECT_EQ("", result.getValue());
     EXPECT_TRUE(result.isEmpty());
+    EXPECT_TRUE(context.isFinished());
 }

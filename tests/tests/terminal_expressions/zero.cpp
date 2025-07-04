@@ -15,6 +15,7 @@ TEST_F(ZeroExpressionTest, InterpretValidZero) {
 
     EXPECT_EQ("0", result.getValue());
     EXPECT_FALSE(result.isEmpty());
+    EXPECT_TRUE(context.isFinished());
 }
 
 TEST_F(ZeroExpressionTest, InterpretInvalidInput) {
@@ -24,6 +25,7 @@ TEST_F(ZeroExpressionTest, InterpretInvalidInput) {
 
     EXPECT_EQ("", result.getValue());
     EXPECT_TRUE(result.isEmpty());
+    EXPECT_EQ("1", context.get(1));
 }
 
 TEST_F(ZeroExpressionTest, InterpretWithFollowingCharacters) {
@@ -33,6 +35,7 @@ TEST_F(ZeroExpressionTest, InterpretWithFollowingCharacters) {
 
     EXPECT_EQ("0", result.getValue());
     EXPECT_FALSE(result.isEmpty());
+    EXPECT_EQ("123", context.get(3));
 }
 
 TEST_F(ZeroExpressionTest, InterpretEmptyString) {
@@ -40,6 +43,6 @@ TEST_F(ZeroExpressionTest, InterpretEmptyString) {
     ZeroExpression expression;
     Token result = expression.interpret(context);
 
-    EXPECT_EQ("", result.getValue());
     EXPECT_TRUE(result.isEmpty());
+    EXPECT_TRUE(context.isFinished());
 }
