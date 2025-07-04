@@ -10,22 +10,19 @@ Token SpecialExpression::interpret(Context& ctx) const {
     static SignExpression signExpr = SignExpression();
     static InfinityExpression infExpr = InfinityExpression();
     static NotANumberExpression nanExpr = NotANumberExpression();
-
     ContextImage img = ctx.backup();
     Token signToken = signExpr.interpret(ctx);
-
+    ctx.setSign(signToken.getValue());
     Token infToken = infExpr.interpret(ctx);
     if (!infToken.isEmpty()) {
         ctx.setIsInf(true);
         return signToken.merge(infToken);
     }
-
     Token nanToken = nanExpr.interpret(ctx);
     if (!nanToken.isEmpty()) {
         ctx.setIsNan(true);
         return signToken.merge(nanToken);
     }
-
     ctx.restore(img);
     return Token("");
 }
