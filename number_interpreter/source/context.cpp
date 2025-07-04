@@ -13,7 +13,8 @@ bool isOutOfString(const string& str, size_t index) {
 }  // namespace
 
 ContextImage::ContextImage(size_t index, string exp, string sign,
-                           string afterDot, string beforeDot, bool isInf, bool isNan)
+                           string afterDot, string beforeDot, bool isInf,
+                           bool isNan)
     : index_(index), exp_(std::move(exp)), sign_(std::move(sign)),
       afterDot_(std::move(afterDot)), beforeDot_(std::move(beforeDot)),
       isInf_(isInf), isNan_(isNan) {}
@@ -26,7 +27,8 @@ bool Context::isFinished() const {
 }
 
 ContextImage Context::backup() const {
-    return ContextImage(index_, exp_, sign_, afterDot_, beforeDot_, isInf_, isNan_);
+    return ContextImage(index_, exp_, sign_, afterDot_, beforeDot_, isInf_,
+                        isNan_);
 }
 
 string Context::get(size_t length) const {

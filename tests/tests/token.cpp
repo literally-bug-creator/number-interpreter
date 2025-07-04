@@ -1,6 +1,6 @@
-#include "abstract_expression.hpp"
-
 #include <gtest/gtest.h>
+
+#include "abstract_expression.hpp"
 
 using namespace number_interpreter;
 
