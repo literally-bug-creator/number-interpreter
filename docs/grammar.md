@@ -10,16 +10,16 @@
 
 # Extended JSON (RFC 7159)
 
-special_value = [ sign ] ( infinity | not_a_number ) ;
-floating_point = signed_number | special_value ;
-signed_number = [ sign ] unsigned_number ;
+extended_decimal = decimal | special_value ;
+special = [ sign ] ( infinity | not_a_number ) ;
 
-unsigned_number = integer_part [ fractional_part ] [ exponent_part ]
+decimal = signed_integer [ fractional_part ] [ exponent_part ]
 | fractional_part [ exponent_part ] ;
 
-exponent_part = exp [ sign ] integer_part ;
+exponent_part = exp signed_integer ;
 fractional_part = dot digit { digit } ;
-integer_part = zero | ( non_zero_digit { digit } ) ;
+signed_integer = [ sign ] unsigned_integer ;
+unsigned_integer = zero | ( non_zero_digit { digit } ;
 
 digit = zero | non_zero_digit ;
 
