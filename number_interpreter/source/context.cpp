@@ -17,7 +17,8 @@ ContextImage::ContextImage(size_t index, string exp, string sign,
     : index_(index), exp_(std::move(exp)), sign_(std::move(sign)),
       afterDot_(std::move(afterDot)), beforeDot_(std::move(beforeDot)) {}
 
-Context::Context(string str) : str_(std::move(str)), index_(0) {}
+Context::Context(string str)
+    : str_(std::move(str)), isInf_(false), isNan_(false), index_(0) {}
 
 bool Context::isFinished() const {
     return index_ >= str_.size();
@@ -40,6 +41,14 @@ NumberParts Context::buildNumberParts() const {
 
 void Context::next(size_t length) {
     index_ += length;
+}
+
+void Context::setIsInf(bool isInf) {
+    isInf_ = isInf;
+}
+
+void Context::setIsNan(bool isNan) {
+    isNan_ = isNan;
 }
 
 void Context::setExp(string exp) {
