@@ -13,7 +13,6 @@ class NumberInterpreterException : public std::runtime_error {
         : std::runtime_error(message) {}
 };
 
-// Exception for when parsing goes out of bounds
 class OutOfRangeException : public NumberInterpreterException {
   public:
     explicit OutOfRangeException(const std::string& message = "Out of context")
