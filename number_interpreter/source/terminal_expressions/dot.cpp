@@ -5,7 +5,7 @@
 using std::string;
 
 namespace number_interpreter {
-std::string DotExpression::interpret(Context& ctx) const {
+Token DotExpression::interpret(Context& ctx) const {
     static const string EMPTY_STR;
     static const string DOT = ".";
     string token = ctx.get(DOT.length());

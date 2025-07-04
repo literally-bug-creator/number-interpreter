@@ -1,8 +1,23 @@
 #pragma once
 
+#include <string>
+
 #include "context.hpp"
 
+using std::string;
+
 namespace number_interpreter {
+class Token {
+    public:
+    explicit Token(string str);
+
+    bool isEmpty();
+    string getValue();
+
+    private:
+    string value_;
+};
+
 class AbstractExpression {
   public:
     AbstractExpression(const AbstractExpression&) = default;
@@ -11,6 +26,6 @@ class AbstractExpression {
     AbstractExpression& operator=(AbstractExpression&&) = delete;
     AbstractExpression();
     virtual ~AbstractExpression() = default;
-    [[nodiscard]] virtual string interpret(Context& context) const;
+    [[nodiscard]] virtual Token interpret(Context& context) const;
 };
 }  // namespace number_interpreter

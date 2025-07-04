@@ -5,6 +5,6 @@
 namespace number_interpreter {
 class SpecialExpression : public AbstractExpression {
   public:
-    string interpret(Context& ctx) const override;
+    Token interpret(Context& ctx) const override;
 };
 }  // namespace number_interpreter

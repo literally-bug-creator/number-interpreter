@@ -4,9 +4,9 @@
 
 #include "number_parts.hpp"
 
-namespace number_interpreter {
 using std::string;
 
+namespace number_interpreter {
 class ContextImage {
   public:
     explicit ContextImage(size_t index, string exp, string sign,
