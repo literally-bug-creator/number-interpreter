@@ -1,16 +1,14 @@
 #include "context.hpp"
 
-#include <stdexcept>
 #include <utility>
 
+#include "exceptions.hpp"
 #include "number_parts.hpp"
 
 namespace number_interpreter {
 namespace {
-constexpr string OUT_OF_RANGE_MSG = "Out of context.";
-
-bool isOutOfRange(size_t index, size_t length, const string& str) {
-    return (index + length) > str.size();
+bool isOutOfString(const string& str, size_t index) {
+    return index > str.size();
 }
 }  // namespace
 
@@ -30,8 +28,8 @@ ContextImage Context::backup() const {
 }
 
 string Context::get(size_t length) const {
-    if (isFinished() || isOutOfRange(index_, length, str_)) {
-        throw std::out_of_range(OUT_OF_RANGE_MSG);
+    if (isFinished() || isOutOfString(str_, index_ + length)) {
+        throw OutOfRangeException();
     }
     return str_.substr(index_, length);
 }
