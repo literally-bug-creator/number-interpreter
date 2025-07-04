@@ -100,6 +100,32 @@ TEST_F(ContextTest, GetThrowsWhenFinished) {
     EXPECT_THROW(context.get(1), OutOfRangeException);
 }
 
+TEST_F(ContextTest, GetThrowsOnEmptyStringWithNonZeroLength) {
+    Context context("");
+
+    EXPECT_THROW(context.get(1), OutOfRangeException);
+}
+
+TEST_F(ContextTest, GetThrowsWhenIndexPlusLengthOverflows) {
+    Context context("test");
+    
+    EXPECT_THROW(context.get(SIZE_MAX), OutOfRangeException);
+}
+
+TEST_F(ContextTest, GetStateUnchangedAfterException) {
+    Context context("hello");
+    context.next(2);
+    context.setSign("-");
+    
+    EXPECT_THROW(context.get(4), OutOfRangeException);
+    
+    // Context state should remain unchanged after exception
+    EXPECT_EQ("l", context.get(1));
+    EXPECT_FALSE(context.isFinished());
+    NumberParts parts = context.buildNumberParts();
+    EXPECT_TRUE(parts.isNegative());
+}
+
 TEST_F(ContextTest, NextMovesForward) {
     Context context("hello");
     context.next(2);
