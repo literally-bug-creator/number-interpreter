@@ -8,13 +8,15 @@ using std::string;
 
 namespace number_interpreter {
 class Token {
-    public:
+  public:
     explicit Token(string str);
 
-    bool isEmpty();
-    string getValue();
+    [[nodiscard]] bool isEmpty() const;
+    [[nodiscard]] string getValue() const;
 
-    private:
+    [[nodiscard]] Token merge(const Token& other) const;
+
+  private:
     string value_;
 };
 
