@@ -9,6 +9,6 @@ Token DotExpression::interpret(Context& ctx) const {
     static const string EMPTY_STR;
     static const string DOT = ".";
     string token = ctx.get(DOT.length());
-    return (token == DOT) ? DOT : EMPTY_STR;
+    return (token == DOT) ? Token(DOT) : Token(EMPTY_STR);
 }
 }  // namespace number_interpreter
