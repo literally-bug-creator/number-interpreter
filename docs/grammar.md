@@ -13,10 +13,9 @@
 extended_decimal = decimal | special_value ;
 special = [ sign ] ( infinity | not_a_number ) ;
 
-decimal = signed_integer [ fractional_part ] [ exponent_part ]
-| fractional_part [ exponent_part ] ;
+decimal = signed_integer [ fractional_part ] [ exponent ];
 
-exponent_part = exp signed_integer ;
+exponent = exp signed_integer ;
 fractional_part = dot digit { digit } ;
 signed_integer = [ sign ] unsigned_integer ;
 unsigned_integer = zero | ( non_zero_digit { digit } ;
