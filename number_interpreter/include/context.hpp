@@ -33,6 +33,8 @@ class Context {
 
     void next(size_t length);
     void setExp(string exp);
+    void setIsInf(bool isInf);
+    void setIsNan(bool isNan);
     void setSign(string sign);
     void setAfterDot(string afterDot);
     void setBeforeDot(string beforeDot);
@@ -41,6 +43,8 @@ class Context {
   private:
     string str_;
     string exp_;
+    bool isInf_;
+    bool isNan_;
     string sign_;
     size_t index_;
     string afterDot_;
