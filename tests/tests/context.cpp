@@ -2,10 +2,9 @@
 
 #include "context.hpp"
 
-#include <stdexcept>
-
 #include <gtest/gtest.h>
 
+#include "exceptions.hpp"
 #include "number_parts.hpp"
 
 using namespace number_interpreter;
@@ -80,14 +79,14 @@ TEST_F(ContextTest, GetFromMiddle) {
 TEST_F(ContextTest, GetThrowsOutOfRange) {
     Context context("hi");
 
-    EXPECT_THROW(context.get(3), std::out_of_range);
+    EXPECT_THROW(context.get(3), OutOfRangeException);
 }
 
 TEST_F(ContextTest, GetThrowsWhenFinished) {
     Context context("hi");
     context.next(2);
 
-    EXPECT_THROW(context.get(1), std::out_of_range);
+    EXPECT_THROW(context.get(1), OutOfRangeException);
 }
 
 TEST_F(ContextTest, NextMovesForward) {
@@ -263,7 +262,7 @@ TEST_F(ContextTest, EmptyStringOperations) {
     bool expectedFinished = true;
 
     EXPECT_EQ(expectedFinished, context.isFinished());
-    EXPECT_THROW(context.get(1), std::out_of_range);
+    EXPECT_THROW(context.get(1), OutOfRangeException);
 }
 
 TEST_F(ContextTest, SingleCharacterString) {
