@@ -7,7 +7,7 @@ using namespace number_interpreter;
 class NumberPartsTest : public ::testing::Test {};
 
 TEST_F(NumberPartsTest, EmptyInputReturnsDefaults) {
-    NumberParts parts("", "", "", "");
+    NumberParts parts("", "", "", "", false, false);
     bool expectedNegative = false;
     Exponent expectedExponent = 0;
     bool expectedEmpty = true;
@@ -22,42 +22,42 @@ TEST_F(NumberPartsTest, EmptyInputReturnsDefaults) {
 }
 
 TEST_F(NumberPartsTest, PositiveSignRecognized) {
-    NumberParts parts("+", "123", "", "");
+    NumberParts parts("+", "123", "", "", false, false);
     bool expected = false;
 
     EXPECT_EQ(expected, parts.isNegative());
 }
 
 TEST_F(NumberPartsTest, NegativeSignRecognized) {
-    NumberParts parts("-", "123", "", "");
+    NumberParts parts("-", "123", "", "", false, false);
     bool expected = true;
 
     EXPECT_EQ(expected, parts.isNegative());
 }
 
 TEST_F(NumberPartsTest, EmptySignIsPositive) {
-    NumberParts parts("", "123", "", "");
+    NumberParts parts("", "123", "", "", false, false);
     bool expected = false;
 
     EXPECT_EQ(expected, parts.isNegative());
 }
 
 TEST_F(NumberPartsTest, InvalidSignIsPositive) {
-    NumberParts parts("invalid", "123", "", "");
+    NumberParts parts("invalid", "123", "", "", false, false);
     bool expected = false;
 
     EXPECT_EQ(expected, parts.isNegative());
 }
 
 TEST_F(NumberPartsTest, MultipleSignsIgnored) {
-    NumberParts parts("--", "123", "", "");
+    NumberParts parts("--", "123", "", "", false, false);
     bool expected = false;
 
     EXPECT_EQ(expected, parts.isNegative());
 }
 
 TEST_F(NumberPartsTest, ValidExponentParsed) {
-    NumberParts parts("", "123", "456", "10");
+    NumberParts parts("", "123", "456", "10", false, false);
     Exponent expected = 10;
 
     Exponent exp = parts.getExponent();
@@ -66,7 +66,7 @@ TEST_F(NumberPartsTest, ValidExponentParsed) {
 }
 
 TEST_F(NumberPartsTest, EmptyExponentIsZero) {
-    NumberParts parts("", "123", "456", "");
+    NumberParts parts("", "123", "456", "", false, false);
     Exponent expected = 0;
 
     Exponent exp = parts.getExponent();
@@ -75,7 +75,7 @@ TEST_F(NumberPartsTest, EmptyExponentIsZero) {
 }
 
 TEST_F(NumberPartsTest, ZeroExponentParsed) {
-    NumberParts parts("", "123", "456", "0");
+    NumberParts parts("", "123", "456", "0", false, false);
     Exponent expected = 0;
 
     Exponent exp = parts.getExponent();
@@ -84,7 +84,7 @@ TEST_F(NumberPartsTest, ZeroExponentParsed) {
 }
 
 TEST_F(NumberPartsTest, LargeExponentParsed) {
-    NumberParts parts("", "123", "456", "999");
+    NumberParts parts("", "123", "456", "999", false, false);
     Exponent expected = 999;
 
     Exponent exp = parts.getExponent();
@@ -93,7 +93,7 @@ TEST_F(NumberPartsTest, LargeExponentParsed) {
 }
 
 TEST_F(NumberPartsTest, MaxExponentParsed) {
-    NumberParts parts("", "1", "", "18446744073709551615");
+    NumberParts parts("", "1", "", "18446744073709551615", false, false);
     Exponent expected = 18446744073709551615ULL;
 
     Exponent exp = parts.getExponent();
@@ -102,7 +102,7 @@ TEST_F(NumberPartsTest, MaxExponentParsed) {
 }
 
 TEST_F(NumberPartsTest, InvalidExponentIsZero) {
-    NumberParts parts("", "123", "456", "abc");
+    NumberParts parts("", "123", "456", "abc", false, false);
     Exponent expected = 0;
 
     Exponent exp = parts.getExponent();
@@ -111,7 +111,7 @@ TEST_F(NumberPartsTest, InvalidExponentIsZero) {
 }
 
 TEST_F(NumberPartsTest, ExponentWithLeadingZeros) {
-    NumberParts parts("", "1", "", "0123");
+    NumberParts parts("", "1", "", "0123", false, false);
     Exponent expected = 123;
 
     Exponent exp = parts.getExponent();
@@ -120,7 +120,7 @@ TEST_F(NumberPartsTest, ExponentWithLeadingZeros) {
 }
 
 TEST_F(NumberPartsTest, ExponentWithOnlyZeros) {
-    NumberParts parts("", "1", "", "000");
+    NumberParts parts("", "1", "", "000", false, false);
     Exponent expected = 0;
 
     Exponent exp = parts.getExponent();
@@ -129,7 +129,7 @@ TEST_F(NumberPartsTest, ExponentWithOnlyZeros) {
 }
 
 TEST_F(NumberPartsTest, ExponentWithMixedInvalidChars) {
-    NumberParts parts("", "1", "", "1a2b3");
+    NumberParts parts("", "1", "", "1a2b3", false, false);
     Exponent expected = 0;
 
     Exponent exp = parts.getExponent();
@@ -138,7 +138,7 @@ TEST_F(NumberPartsTest, ExponentWithMixedInvalidChars) {
 }
 
 TEST_F(NumberPartsTest, BeforeDotDigitsParsed) {
-    NumberParts parts("", "123", "", "");
+    NumberParts parts("", "123", "", "", false, false);
     size_t expectedSize = 3;
     uint8_t expectedFirst = 1;
     uint8_t expectedSecond = 2;
@@ -153,7 +153,7 @@ TEST_F(NumberPartsTest, BeforeDotDigitsParsed) {
 }
 
 TEST_F(NumberPartsTest, AfterDotDigitsParsed) {
-    NumberParts parts("", "", "456", "");
+    NumberParts parts("", "", "456", "", false, false);
     size_t expectedSize = 3;
     uint8_t expectedFirst = 4;
     uint8_t expectedSecond = 5;
@@ -168,7 +168,7 @@ TEST_F(NumberPartsTest, AfterDotDigitsParsed) {
 }
 
 TEST_F(NumberPartsTest, AllDigitsCombined) {
-    NumberParts parts("", "123", "456", "");
+    NumberParts parts("", "123", "456", "", false, false);
     size_t expectedSize = 6;
     std::vector<uint8_t> expectedDigits = {1, 2, 3, 4, 5, 6};
 
@@ -181,7 +181,7 @@ TEST_F(NumberPartsTest, AllDigitsCombined) {
 }
 
 TEST_F(NumberPartsTest, EmptyDigitsReturnEmpty) {
-    NumberParts parts("", "", "", "");
+    NumberParts parts("", "", "", "", false, false);
     bool expectedEmpty = true;
 
     Digits digits = parts.getSignificantDigits();
@@ -190,7 +190,7 @@ TEST_F(NumberPartsTest, EmptyDigitsReturnEmpty) {
 }
 
 TEST_F(NumberPartsTest, InvalidDigitsReturnEmpty) {
-    NumberParts parts("", "1a2b", "3c4d", "");
+    NumberParts parts("", "1a2b", "3c4d", "", false, false);
     size_t expectedSize = 0;
 
     Digits digits = parts.getSignificantDigits();
@@ -199,7 +199,7 @@ TEST_F(NumberPartsTest, InvalidDigitsReturnEmpty) {
 }
 
 TEST_F(NumberPartsTest, OnlyBeforeDotInvalid) {
-    NumberParts parts("", "1a2", "", "");
+    NumberParts parts("", "1a2", "", "", false, false);
     bool expectedEmpty = true;
 
     Digits digits = parts.getSignificantDigits();
@@ -208,7 +208,7 @@ TEST_F(NumberPartsTest, OnlyBeforeDotInvalid) {
 }
 
 TEST_F(NumberPartsTest, OnlyAfterDotInvalid) {
-    NumberParts parts("", "", "1a2", "");
+    NumberParts parts("", "", "1a2", "", false, false);
     bool expectedEmpty = true;
 
     Digits digits = parts.getSignificantDigits();
@@ -217,7 +217,7 @@ TEST_F(NumberPartsTest, OnlyAfterDotInvalid) {
 }
 
 TEST_F(NumberPartsTest, ZeroDigitsParsed) {
-    NumberParts parts("", "000", "000", "");
+    NumberParts parts("", "000", "000", "", false, false);
     size_t expectedSize = 6;
     uint8_t expectedDigit = 0;
 
@@ -230,7 +230,7 @@ TEST_F(NumberPartsTest, ZeroDigitsParsed) {
 }
 
 TEST_F(NumberPartsTest, SingleDigitParsed) {
-    NumberParts parts("", "5", "", "");
+    NumberParts parts("", "5", "", "", false, false);
     size_t expectedSize = 1;
     uint8_t expectedDigit = 5;
 
@@ -241,7 +241,7 @@ TEST_F(NumberPartsTest, SingleDigitParsed) {
 }
 
 TEST_F(NumberPartsTest, IntegerOnlyParsed) {
-    NumberParts parts("-", "42", "", "3");
+    NumberParts parts("-", "42", "", "3", false, false);
     bool expectedNegative = true;
     Exponent expectedExponent = 3;
     size_t expectedSize = 2;
@@ -258,7 +258,7 @@ TEST_F(NumberPartsTest, IntegerOnlyParsed) {
 }
 
 TEST_F(NumberPartsTest, FractionalOnlyParsed) {
-    NumberParts parts("+", "", "25", "7");
+    NumberParts parts("+", "", "25", "7", false, false);
     bool expectedNegative = false;
     Exponent expectedExponent = 7;
     size_t expectedSize = 2;
@@ -275,7 +275,7 @@ TEST_F(NumberPartsTest, FractionalOnlyParsed) {
 }
 
 TEST_F(NumberPartsTest, CompletePositiveNumber) {
-    NumberParts parts("+", "123", "456", "10");
+    NumberParts parts("+", "123", "456", "10", false, false);
     bool expectedNegative = false;
     Exponent expectedExponent = 10;
     size_t expectedSize = 6;
@@ -292,7 +292,7 @@ TEST_F(NumberPartsTest, CompletePositiveNumber) {
 }
 
 TEST_F(NumberPartsTest, CompleteNegativeNumber) {
-    NumberParts parts("-", "789", "012", "5");
+    NumberParts parts("-", "789", "012", "5", false, false);
     bool expectedNegative = true;
     Exponent expectedExponent = 5;
     size_t expectedSize = 6;
@@ -308,8 +308,17 @@ TEST_F(NumberPartsTest, CompleteNegativeNumber) {
     }
 }
 
-TEST_F(NumberPartsTest, IsInfAlwaysFalse) {
-    NumberParts parts("", "123", "456", "");
+TEST_F(NumberPartsTest, IsInfWhenSet) {
+    NumberParts parts("", "123", "456", "", true, false);
+    bool expected = true;
+
+    bool result = parts.isInf();
+
+    EXPECT_EQ(expected, result);
+}
+
+TEST_F(NumberPartsTest, IsInfWhenNotSet) {
+    NumberParts parts("", "123", "456", "", false, false);
     bool expected = false;
 
     bool result = parts.isInf();
@@ -317,8 +326,17 @@ TEST_F(NumberPartsTest, IsInfAlwaysFalse) {
     EXPECT_EQ(expected, result);
 }
 
-TEST_F(NumberPartsTest, IsNanAlwaysFalse) {
-    NumberParts parts("", "123", "456", "");
+TEST_F(NumberPartsTest, IsNanWhenSet) {
+    NumberParts parts("", "123", "456", "", false, true);
+    bool expected = true;
+
+    bool result = parts.isNan();
+
+    EXPECT_EQ(expected, result);
+}
+
+TEST_F(NumberPartsTest, IsNanWhenNotSet) {
+    NumberParts parts("", "123", "456", "", false, false);
     bool expected = false;
 
     bool result = parts.isNan();
