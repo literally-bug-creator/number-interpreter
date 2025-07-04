@@ -6,60 +6,57 @@ using namespace number_interpreter;
 
 class NumberPartsTest : public ::testing::Test {};
 
-TEST_F(NumberPartsTest, EmptyStringsConstructor) {
+TEST_F(NumberPartsTest, EmptyInputReturnsDefaults) {
     NumberParts parts("", "", "", "");
     bool expectedNegative = false;
     Exponent expectedExponent = 0;
     bool expectedEmpty = true;
+    bool expectedInf = false;
+    bool expectedNan = false;
 
     EXPECT_EQ(expectedNegative, parts.isNegative());
     EXPECT_EQ(expectedExponent, parts.getExponent());
     EXPECT_EQ(expectedEmpty, parts.getSignificantDigits().empty());
+    EXPECT_EQ(expectedInf, parts.isInf());
+    EXPECT_EQ(expectedNan, parts.isNan());
 }
 
-TEST_F(NumberPartsTest, PositiveSignConstructor) {
+TEST_F(NumberPartsTest, PositiveSignRecognized) {
     NumberParts parts("+", "123", "", "");
     bool expected = false;
 
     EXPECT_EQ(expected, parts.isNegative());
 }
 
-TEST_F(NumberPartsTest, NegativeSignConstructor) {
+TEST_F(NumberPartsTest, NegativeSignRecognized) {
     NumberParts parts("-", "123", "", "");
     bool expected = true;
 
     EXPECT_EQ(expected, parts.isNegative());
 }
 
-TEST_F(NumberPartsTest, EmptySignConstructor) {
+TEST_F(NumberPartsTest, EmptySignIsPositive) {
     NumberParts parts("", "123", "", "");
     bool expected = false;
 
     EXPECT_EQ(expected, parts.isNegative());
 }
 
-TEST_F(NumberPartsTest, IsNegativeWithMinus) {
-    NumberParts parts("-", "123", "456", "");
-    bool expected = true;
-
-    EXPECT_EQ(expected, parts.isNegative());
-}
-
-TEST_F(NumberPartsTest, IsNegativeWithPlus) {
-    NumberParts parts("+", "123", "456", "");
+TEST_F(NumberPartsTest, InvalidSignIsPositive) {
+    NumberParts parts("invalid", "123", "", "");
     bool expected = false;
 
     EXPECT_EQ(expected, parts.isNegative());
 }
 
-TEST_F(NumberPartsTest, IsNegativeWithoutSign) {
-    NumberParts parts("", "123", "456", "");
+TEST_F(NumberPartsTest, MultipleSignsIgnored) {
+    NumberParts parts("--", "123", "", "");
     bool expected = false;
 
     EXPECT_EQ(expected, parts.isNegative());
 }
 
-TEST_F(NumberPartsTest, GetValidExponent) {
+TEST_F(NumberPartsTest, ValidExponentParsed) {
     NumberParts parts("", "123", "456", "10");
     Exponent expected = 10;
 
@@ -68,7 +65,7 @@ TEST_F(NumberPartsTest, GetValidExponent) {
     EXPECT_EQ(expected, exp);
 }
 
-TEST_F(NumberPartsTest, GetEmptyExponent) {
+TEST_F(NumberPartsTest, EmptyExponentIsZero) {
     NumberParts parts("", "123", "456", "");
     Exponent expected = 0;
 
@@ -77,7 +74,7 @@ TEST_F(NumberPartsTest, GetEmptyExponent) {
     EXPECT_EQ(expected, exp);
 }
 
-TEST_F(NumberPartsTest, GetZeroExponent) {
+TEST_F(NumberPartsTest, ZeroExponentParsed) {
     NumberParts parts("", "123", "456", "0");
     Exponent expected = 0;
 
@@ -86,7 +83,7 @@ TEST_F(NumberPartsTest, GetZeroExponent) {
     EXPECT_EQ(expected, exp);
 }
 
-TEST_F(NumberPartsTest, GetLargeExponent) {
+TEST_F(NumberPartsTest, LargeExponentParsed) {
     NumberParts parts("", "123", "456", "999");
     Exponent expected = 999;
 
@@ -95,7 +92,16 @@ TEST_F(NumberPartsTest, GetLargeExponent) {
     EXPECT_EQ(expected, exp);
 }
 
-TEST_F(NumberPartsTest, GetInvalidExponent) {
+TEST_F(NumberPartsTest, MaxExponentParsed) {
+    NumberParts parts("", "1", "", "18446744073709551615");
+    Exponent expected = 18446744073709551615ULL;
+
+    Exponent exp = parts.getExponent();
+
+    EXPECT_EQ(expected, exp);
+}
+
+TEST_F(NumberPartsTest, InvalidExponentIsZero) {
     NumberParts parts("", "123", "456", "abc");
     Exponent expected = 0;
 
@@ -104,7 +110,34 @@ TEST_F(NumberPartsTest, GetInvalidExponent) {
     EXPECT_EQ(expected, exp);
 }
 
-TEST_F(NumberPartsTest, GetBeforeDotDigits) {
+TEST_F(NumberPartsTest, ExponentWithLeadingZeros) {
+    NumberParts parts("", "1", "", "0123");
+    Exponent expected = 123;
+
+    Exponent exp = parts.getExponent();
+
+    EXPECT_EQ(expected, exp);
+}
+
+TEST_F(NumberPartsTest, ExponentWithOnlyZeros) {
+    NumberParts parts("", "1", "", "000");
+    Exponent expected = 0;
+
+    Exponent exp = parts.getExponent();
+
+    EXPECT_EQ(expected, exp);
+}
+
+TEST_F(NumberPartsTest, ExponentWithMixedInvalidChars) {
+    NumberParts parts("", "1", "", "1a2b3");
+    Exponent expected = 0;
+
+    Exponent exp = parts.getExponent();
+
+    EXPECT_EQ(expected, exp);
+}
+
+TEST_F(NumberPartsTest, BeforeDotDigitsParsed) {
     NumberParts parts("", "123", "", "");
     size_t expectedSize = 3;
     uint8_t expectedFirst = 1;
@@ -119,7 +152,7 @@ TEST_F(NumberPartsTest, GetBeforeDotDigits) {
     EXPECT_EQ(expectedThird, digits[2]);
 }
 
-TEST_F(NumberPartsTest, GetAfterDotDigits) {
+TEST_F(NumberPartsTest, AfterDotDigitsParsed) {
     NumberParts parts("", "", "456", "");
     size_t expectedSize = 3;
     uint8_t expectedFirst = 4;
@@ -134,7 +167,7 @@ TEST_F(NumberPartsTest, GetAfterDotDigits) {
     EXPECT_EQ(expectedThird, digits[2]);
 }
 
-TEST_F(NumberPartsTest, GetAllDigits) {
+TEST_F(NumberPartsTest, AllDigitsCombined) {
     NumberParts parts("", "123", "456", "");
     size_t expectedSize = 6;
     std::vector<uint8_t> expectedDigits = {1, 2, 3, 4, 5, 6};
@@ -147,7 +180,7 @@ TEST_F(NumberPartsTest, GetAllDigits) {
     }
 }
 
-TEST_F(NumberPartsTest, GetEmptyDigits) {
+TEST_F(NumberPartsTest, EmptyDigitsReturnEmpty) {
     NumberParts parts("", "", "", "");
     bool expectedEmpty = true;
 
@@ -156,20 +189,34 @@ TEST_F(NumberPartsTest, GetEmptyDigits) {
     EXPECT_EQ(expectedEmpty, digits.empty());
 }
 
-TEST_F(NumberPartsTest, GetDigitsFiltersNonDigits) {
+TEST_F(NumberPartsTest, InvalidDigitsReturnEmpty) {
     NumberParts parts("", "1a2b", "3c4d", "");
     size_t expectedSize = 0;
-    std::vector<uint8_t> expectedDigits = {};
 
     Digits digits = parts.getSignificantDigits();
 
     EXPECT_EQ(expectedSize, digits.size());
-    for (size_t i = 0; i < expectedSize; ++i) {
-        EXPECT_EQ(expectedDigits[i], digits[i]);
-    }
 }
 
-TEST_F(NumberPartsTest, GetZeroDigits) {
+TEST_F(NumberPartsTest, OnlyBeforeDotInvalid) {
+    NumberParts parts("", "1a2", "", "");
+    bool expectedEmpty = true;
+
+    Digits digits = parts.getSignificantDigits();
+
+    EXPECT_EQ(expectedEmpty, digits.empty());
+}
+
+TEST_F(NumberPartsTest, OnlyAfterDotInvalid) {
+    NumberParts parts("", "", "1a2", "");
+    bool expectedEmpty = true;
+
+    Digits digits = parts.getSignificantDigits();
+
+    EXPECT_EQ(expectedEmpty, digits.empty());
+}
+
+TEST_F(NumberPartsTest, ZeroDigitsParsed) {
     NumberParts parts("", "000", "000", "");
     size_t expectedSize = 6;
     uint8_t expectedDigit = 0;
@@ -180,6 +227,51 @@ TEST_F(NumberPartsTest, GetZeroDigits) {
     for (auto digit : digits) {
         EXPECT_EQ(expectedDigit, digit);
     }
+}
+
+TEST_F(NumberPartsTest, SingleDigitParsed) {
+    NumberParts parts("", "5", "", "");
+    size_t expectedSize = 1;
+    uint8_t expectedDigit = 5;
+
+    Digits digits = parts.getSignificantDigits();
+
+    EXPECT_EQ(expectedSize, digits.size());
+    EXPECT_EQ(expectedDigit, digits[0]);
+}
+
+TEST_F(NumberPartsTest, IntegerOnlyParsed) {
+    NumberParts parts("-", "42", "", "3");
+    bool expectedNegative = true;
+    Exponent expectedExponent = 3;
+    size_t expectedSize = 2;
+    uint8_t expectedFirst = 4;
+    uint8_t expectedSecond = 2;
+
+    EXPECT_EQ(expectedNegative, parts.isNegative());
+    EXPECT_EQ(expectedExponent, parts.getExponent());
+
+    Digits digits = parts.getSignificantDigits();
+    EXPECT_EQ(expectedSize, digits.size());
+    EXPECT_EQ(expectedFirst, digits[0]);
+    EXPECT_EQ(expectedSecond, digits[1]);
+}
+
+TEST_F(NumberPartsTest, FractionalOnlyParsed) {
+    NumberParts parts("+", "", "25", "7");
+    bool expectedNegative = false;
+    Exponent expectedExponent = 7;
+    size_t expectedSize = 2;
+    uint8_t expectedFirst = 2;
+    uint8_t expectedSecond = 5;
+
+    EXPECT_EQ(expectedNegative, parts.isNegative());
+    EXPECT_EQ(expectedExponent, parts.getExponent());
+
+    Digits digits = parts.getSignificantDigits();
+    EXPECT_EQ(expectedSize, digits.size());
+    EXPECT_EQ(expectedFirst, digits[0]);
+    EXPECT_EQ(expectedSecond, digits[1]);
 }
 
 TEST_F(NumberPartsTest, CompletePositiveNumber) {
@@ -216,65 +308,20 @@ TEST_F(NumberPartsTest, CompleteNegativeNumber) {
     }
 }
 
-TEST_F(NumberPartsTest, IntegerOnly) {
-    NumberParts parts("-", "42", "", "3");
-    bool expectedNegative = true;
-    Exponent expectedExponent = 3;
-    size_t expectedSize = 2;
-    uint8_t expectedFirst = 4;
-    uint8_t expectedSecond = 2;
+TEST_F(NumberPartsTest, IsInfAlwaysFalse) {
+    NumberParts parts("", "123", "456", "");
+    bool expected = false;
 
-    EXPECT_EQ(expectedNegative, parts.isNegative());
-    EXPECT_EQ(expectedExponent, parts.getExponent());
+    bool result = parts.isInf();
 
-    Digits digits = parts.getSignificantDigits();
-    EXPECT_EQ(expectedSize, digits.size());
-    EXPECT_EQ(expectedFirst, digits[0]);
-    EXPECT_EQ(expectedSecond, digits[1]);
+    EXPECT_EQ(expected, result);
 }
 
-TEST_F(NumberPartsTest, FractionalOnly) {
-    NumberParts parts("+", "", "25", "7");
-    bool expectedNegative = false;
-    Exponent expectedExponent = 7;
-    size_t expectedSize = 2;
-    uint8_t expectedFirst = 2;
-    uint8_t expectedSecond = 5;
+TEST_F(NumberPartsTest, IsNanAlwaysFalse) {
+    NumberParts parts("", "123", "456", "");
+    bool expected = false;
 
-    EXPECT_EQ(expectedNegative, parts.isNegative());
-    EXPECT_EQ(expectedExponent, parts.getExponent());
+    bool result = parts.isNan();
 
-    Digits digits = parts.getSignificantDigits();
-    EXPECT_EQ(expectedSize, digits.size());
-    EXPECT_EQ(expectedFirst, digits[0]);
-    EXPECT_EQ(expectedSecond, digits[1]);
-}
-
-TEST_F(NumberPartsTest, SingleDigitNumber) {
-    NumberParts parts("", "5", "", "");
-    size_t expectedSize = 1;
-    uint8_t expectedDigit = 5;
-
-    Digits digits = parts.getSignificantDigits();
-
-    EXPECT_EQ(expectedSize, digits.size());
-    EXPECT_EQ(expectedDigit, digits[0]);
-}
-
-TEST_F(NumberPartsTest, MaxExponent) {
-    NumberParts parts("", "1", "", "18446744073709551615");
-    Exponent expected = 18446744073709551615ULL;
-
-    Exponent exp = parts.getExponent();
-
-    EXPECT_EQ(expected, exp);
-}
-
-TEST_F(NumberPartsTest, ExponentParsesValidPrefix) {
-    NumberParts parts("", "1", "", "123abc");
-    Exponent expected = 0;
-
-    Exponent exp = parts.getExponent();
-
-    EXPECT_EQ(expected, exp);
+    EXPECT_EQ(expected, result);
 }
