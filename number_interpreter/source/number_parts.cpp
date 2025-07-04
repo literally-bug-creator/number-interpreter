@@ -56,6 +56,14 @@ NumberParts::NumberParts(const string& sign, const string& beforeDot,
     : exp_(parseExponent(exp)), isNegative_(parseSign(sign)),
       significantDigits_(parseSignificantDigits(beforeDot, afterDot)) {}
 
+bool NumberParts::isInf() const {
+    return isInf_;
+}
+
+bool NumberParts::isNan() const {
+    return isNan_;
+}
+
 bool NumberParts::isNegative() const {
     return isNegative_;
 }

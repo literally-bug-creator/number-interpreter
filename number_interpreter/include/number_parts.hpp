@@ -14,6 +14,8 @@ class NumberParts {
     explicit NumberParts(const string& sign, const string& beforeDot,
                          const string& afterDot, const string& exp);
 
+    [[nodiscard]] bool isInf() const;
+    [[nodiscard]] bool isNan() const;
     [[nodiscard]] bool isNegative() const;
     [[nodiscard]] Exponent getExponent() const;
     [[nodiscard]] Digits getSignificantDigits() const;
@@ -22,5 +24,7 @@ class NumberParts {
     Exponent exp_;
     bool isNegative_;
     Digits significantDigits_;
+    bool isInf_ = false;
+    bool isNan_ = false;
 };
 }  // namespace number_interpreter
