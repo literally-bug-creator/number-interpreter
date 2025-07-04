@@ -20,7 +20,7 @@ void benchNumberParts(benchmark::State& state) {
     std::string exp = std::to_string(std::numeric_limits<Exponent>::max());
 
     for (auto length : state) {
-        NumberParts parts(sign, beforeDot, afterDot, exp);
+        NumberParts parts(sign, beforeDot, afterDot, exp, false, false);
     }
 }
 }  // namespace
