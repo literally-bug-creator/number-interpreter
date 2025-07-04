@@ -11,28 +11,21 @@ using namespace number_interpreter;
 
 class ContextTest : public ::testing::Test {};
 
-TEST_F(ContextTest, EmptyStringConstructor) {
+TEST_F(ContextTest, EmptyStringIsFinished) {
     Context context("");
     bool expected = true;
 
     EXPECT_EQ(expected, context.isFinished());
 }
 
-TEST_F(ContextTest, NonEmptyStringConstructor) {
+TEST_F(ContextTest, NonEmptyStringNotFinished) {
     Context context("12345");
     bool expected = false;
 
     EXPECT_EQ(expected, context.isFinished());
 }
 
-TEST_F(ContextTest, IsFinishedInitially) {
-    Context context("test");
-    bool expected = false;
-
-    EXPECT_EQ(expected, context.isFinished());
-}
-
-TEST_F(ContextTest, IsFinishedAfterProcessing) {
+TEST_F(ContextTest, FinishedAfterProcessing) {
     Context context("123");
     context.next(3);
     bool expected = true;
@@ -40,7 +33,7 @@ TEST_F(ContextTest, IsFinishedAfterProcessing) {
     EXPECT_EQ(expected, context.isFinished());
 }
 
-TEST_F(ContextTest, IsFinishedBeyondEnd) {
+TEST_F(ContextTest, FinishedBeyondEnd) {
     Context context("12");
     context.next(5);
     bool expected = true;
@@ -72,6 +65,24 @@ TEST_F(ContextTest, GetFromMiddle) {
     string expected = "ll";
 
     string result = context.get(2);
+
+    EXPECT_EQ(expected, result);
+}
+
+TEST_F(ContextTest, GetWithZeroLength) {
+    Context context("hello");
+    string expected = "";
+
+    string result = context.get(0);
+
+    EXPECT_EQ(expected, result);
+}
+
+TEST_F(ContextTest, GetExactLength) {
+    Context context("hello");
+    string expected = "hello";
+
+    string result = context.get(5);
 
     EXPECT_EQ(expected, result);
 }
@@ -117,7 +128,7 @@ TEST_F(ContextTest, NextBeyondEnd) {
     EXPECT_EQ(expected, context.isFinished());
 }
 
-TEST_F(ContextTest, SetSign) {
+TEST_F(ContextTest, SetSignNegative) {
     Context context("test");
     context.setSign("-");
     bool expected = true;
@@ -152,6 +163,42 @@ TEST_F(ContextTest, SetExp) {
     NumberParts parts = context.buildNumberParts();
 
     EXPECT_NO_THROW(parts.getExponent());
+}
+
+TEST_F(ContextTest, SetIsInfTrue) {
+    Context context("test");
+    context.setIsInf(true);
+
+    NumberParts parts = context.buildNumberParts();
+
+    EXPECT_TRUE(parts.isInf());
+}
+
+TEST_F(ContextTest, SetIsInfFalse) {
+    Context context("test");
+    context.setIsInf(false);
+
+    NumberParts parts = context.buildNumberParts();
+
+    EXPECT_FALSE(parts.isInf());
+}
+
+TEST_F(ContextTest, SetIsNanTrue) {
+    Context context("test");
+    context.setIsNan(true);
+
+    NumberParts parts = context.buildNumberParts();
+
+    EXPECT_TRUE(parts.isNan());
+}
+
+TEST_F(ContextTest, SetIsNanFalse) {
+    Context context("test");
+    context.setIsNan(false);
+
+    NumberParts parts = context.buildNumberParts();
+
+    EXPECT_FALSE(parts.isNan());
 }
 
 TEST_F(ContextTest, BuildEmptyNumberParts) {
@@ -198,6 +245,40 @@ TEST_F(ContextTest, BackupAndRestore) {
     EXPECT_EQ(expectedNegative, parts.isNegative());
 }
 
+TEST_F(ContextTest, BackupRestoreAllFields) {
+    Context context("hello");
+    context.next(1);
+    context.setSign("-");
+    context.setBeforeDot("123");
+    context.setAfterDot("456");
+    context.setExp("10");
+    context.setIsInf(true);
+    context.setIsNan(true);
+    
+    ContextImage backup = context.backup();
+    
+    context.next(2);
+    context.setSign("+");
+    context.setBeforeDot("789");
+    context.setAfterDot("012");
+    context.setExp("5");
+    context.setIsInf(false);
+    context.setIsNan(false);
+    
+    context.restore(backup);
+    
+    string expectedChar = "e";
+    bool expectedNegative = true;
+    Exponent expectedExponent = 10;
+
+    EXPECT_EQ(expectedChar, context.get(1));
+    NumberParts parts = context.buildNumberParts();
+    EXPECT_EQ(expectedNegative, parts.isNegative());
+    EXPECT_EQ(expectedExponent, parts.getExponent());
+    EXPECT_TRUE(parts.isInf());
+    EXPECT_TRUE(parts.isNan());
+}
+
 TEST_F(ContextTest, MultipleBackupRestore) {
     Context context("hello");
     context.next(1);
@@ -214,6 +295,23 @@ TEST_F(ContextTest, MultipleBackupRestore) {
     EXPECT_EQ(expectedChar, context.get(1));
     NumberParts parts = context.buildNumberParts();
     EXPECT_EQ(expectedNegative, parts.isNegative());
+}
+
+TEST_F(ContextTest, MultipleSettersOverwrite) {
+    Context context("test");
+    context.setSign("-");
+    context.setSign("+");
+    context.setBeforeDot("123");
+    context.setBeforeDot("456");
+    
+    NumberParts parts = context.buildNumberParts();
+    
+    EXPECT_FALSE(parts.isNegative());
+    Digits digits = parts.getSignificantDigits();
+    EXPECT_EQ(3, digits.size());
+    EXPECT_EQ(4, digits[0]);
+    EXPECT_EQ(5, digits[1]);
+    EXPECT_EQ(6, digits[2]);
 }
 
 TEST_F(ContextTest, CompleteNumberParsing) {
