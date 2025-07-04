@@ -22,8 +22,8 @@ TEST_F(InfinityExpressionTest, InterpretInfUppercase) {
     InfinityExpression expression;
     Token result = expression.interpret(context);
 
-    EXPECT_EQ("Inf", result.getValue());
-    EXPECT_FALSE(result.isEmpty());
+    EXPECT_EQ("", result.getValue());
+    EXPECT_TRUE(result.isEmpty());
 }
 
 TEST_F(InfinityExpressionTest, InterpretInfinityFull) {

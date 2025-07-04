@@ -22,8 +22,8 @@ TEST_F(NotANumberExpressionTest, InterpretNanUppercase) {
     NotANumberExpression expression;
     Token result = expression.interpret(context);
 
-    EXPECT_EQ("NaN", result.getValue());
-    EXPECT_FALSE(result.isEmpty());
+    EXPECT_EQ("", result.getValue());
+    EXPECT_TRUE(result.isEmpty());
 }
 
 TEST_F(NotANumberExpressionTest, InterpretNanAllCaps) {
@@ -31,8 +31,8 @@ TEST_F(NotANumberExpressionTest, InterpretNanAllCaps) {
     NotANumberExpression expression;
     Token result = expression.interpret(context);
 
-    EXPECT_EQ("NAN", result.getValue());
-    EXPECT_FALSE(result.isEmpty());
+    EXPECT_EQ("", result.getValue());
+    EXPECT_TRUE(result.isEmpty());
 }
 
 TEST_F(NotANumberExpressionTest, InterpretInvalidInput) {

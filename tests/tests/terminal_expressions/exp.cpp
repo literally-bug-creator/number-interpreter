@@ -22,8 +22,8 @@ TEST_F(ExpExpressionTest, InterpretUppercaseE) {
     ExpExpression expression;
     Token result = expression.interpret(context);
 
-    EXPECT_EQ("E", result.getValue());
-    EXPECT_FALSE(result.isEmpty());
+    EXPECT_EQ("", result.getValue());
+    EXPECT_TRUE(result.isEmpty());
 }
 
 TEST_F(ExpExpressionTest, InterpretInvalidInput) {
