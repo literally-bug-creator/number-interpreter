@@ -13,9 +13,10 @@ bool isOutOfString(const string& str, size_t index) {
 }  // namespace
 
 ContextImage::ContextImage(size_t index, string exp, string sign,
-                           string afterDot, string beforeDot)
+                           string afterDot, string beforeDot, bool isInf, bool isNan)
     : index_(index), exp_(std::move(exp)), sign_(std::move(sign)),
-      afterDot_(std::move(afterDot)), beforeDot_(std::move(beforeDot)) {}
+      afterDot_(std::move(afterDot)), beforeDot_(std::move(beforeDot)),
+      isInf_(isInf), isNan_(isNan) {}
 
 Context::Context(string str)
     : str_(std::move(str)), isInf_(false), isNan_(false), index_(0) {}
@@ -25,7 +26,7 @@ bool Context::isFinished() const {
 }
 
 ContextImage Context::backup() const {
-    return ContextImage(index_, exp_, sign_, afterDot_, beforeDot_);
+    return ContextImage(index_, exp_, sign_, afterDot_, beforeDot_, isInf_, isNan_);
 }
 
 string Context::get(size_t length) const {
@@ -36,7 +37,7 @@ string Context::get(size_t length) const {
 }
 
 NumberParts Context::buildNumberParts() const {
-    return NumberParts(sign_, beforeDot_, afterDot_, exp_);
+    return NumberParts(sign_, beforeDot_, afterDot_, exp_, isInf_, isNan_);
 }
 
 void Context::next(size_t length) {
@@ -73,5 +74,7 @@ void Context::restore(const ContextImage& img) {
     sign_ = img.sign_;
     afterDot_ = img.afterDot_;
     beforeDot_ = img.beforeDot_;
+    isInf_ = img.isInf_;
+    isNan_ = img.isNan_;
 }
 }  // namespace number_interpreter

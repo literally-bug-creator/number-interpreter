@@ -10,7 +10,7 @@ namespace number_interpreter {
 class ContextImage {
   public:
     explicit ContextImage(size_t index, string exp, string sign,
-                          string afterDot, string beforeDot);
+                          string afterDot, string beforeDot, bool isInf, bool isNan);
 
   private:
     size_t index_;
@@ -18,6 +18,8 @@ class ContextImage {
     string sign_;
     string afterDot_;
     string beforeDot_;
+    bool isInf_;
+    bool isNan_;
 
     friend class Context;
 };
