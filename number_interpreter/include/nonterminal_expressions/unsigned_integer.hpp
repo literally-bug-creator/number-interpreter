@@ -11,6 +11,6 @@ class UnsignedIntegerExpression : public AbstractExpression {
 
   private:
     ZeroExpression zero_ = ZeroExpression();
-    NonZeroDigit nonZeroDigit_ = NonZeroDigit();
+    NonZeroDigitExpression nonZeroDigit_ = NonZeroDigitExpression();
 };
 }  // namespace number_interpreter
