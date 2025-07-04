@@ -19,7 +19,10 @@ Token NonZeroDigitExpression::interpret(Context& ctx) const {
         return Token(EMPTY_STR);
     }
     const auto* findIterator = find(DIGITS.begin(), DIGITS.end(), token);
-    return (findIterator == DIGITS.end()) ? Token(EMPTY_STR)
-                                          : Token(*findIterator);
+    if (findIterator != DIGITS.end()) {
+        ctx.next(DIGIT_LENGTH);
+        return Token(*findIterator);
+    }
+    return Token(EMPTY_STR);
 }
 }  // namespace number_interpreter

@@ -16,6 +16,10 @@ Token ExpExpression::interpret(Context& ctx) const {
     } catch (const OutOfRangeException&) {
         return Token(EMPTY_STR);
     }
-    return (token == EXP) ? Token(EXP) : Token(EMPTY_STR);
+    if (token == EXP) {
+        ctx.next(EXP.length());
+        return Token(EXP);
+    }
+    return Token(EMPTY_STR);
 }
 }  // namespace number_interpreter

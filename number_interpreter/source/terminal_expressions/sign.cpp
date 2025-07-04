@@ -18,7 +18,10 @@ Token SignExpression::interpret(Context& ctx) const {
     } catch (const OutOfRangeException&) {
         return Token(EMPTY_STR);
     }
-    return (token == MINUS) || (token == PLUS) ? Token(token)
-                                               : Token(EMPTY_STR);
+    if (token == MINUS || token == PLUS) {
+        ctx.next(SIGN_LENGTH);
+        return Token(token);
+    }
+    return Token(EMPTY_STR);
 }
 }  // namespace number_interpreter

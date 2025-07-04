@@ -16,6 +16,10 @@ Token NotANumberExpression::interpret(Context& ctx) const {
     } catch (const OutOfRangeException&) {
         return Token(EMPTY_STR);
     }
-    return (token == NAN) ? Token(NAN) : Token(EMPTY_STR);
+    if (token == NAN) {
+        ctx.next(NAN.length());
+        return Token(NAN);
+    }
+    return Token(EMPTY_STR);
 }
 }  // namespace number_interpreter

@@ -16,6 +16,10 @@ Token ZeroExpression::interpret(Context& ctx) const {
     } catch (const OutOfRangeException&) {
         return Token(EMPTY_STR);
     }
-    return (token == ZERO) ? Token(ZERO) : Token(EMPTY_STR);
+    if (token == ZERO) {
+        ctx.next(ZERO.length());
+        return Token(ZERO);
+    }
+    return Token(EMPTY_STR);
 }
 }  // namespace number_interpreter

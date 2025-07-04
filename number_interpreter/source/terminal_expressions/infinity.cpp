@@ -16,6 +16,10 @@ Token InfinityExpression::interpret(Context& ctx) const {
     } catch (const OutOfRangeException&) {
         return Token(EMPTY_STR);
     }
-    return (token == INF) ? Token(INF) : Token(EMPTY_STR);
+    if (token == INF) {
+        ctx.next(INF.length());
+        return Token(INF);
+    }
+    return Token(EMPTY_STR);
 }
 }  // namespace number_interpreter
