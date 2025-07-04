@@ -6,7 +6,7 @@ namespace number_interpreter {
 class AbstractExpression {
   public:
     AbstractExpression(const AbstractExpression&) = default;
-    AbstractExpression(AbstractExpression&&) = delete;
+    AbstractExpression(AbstractExpression&&) = default;
     AbstractExpression& operator=(const AbstractExpression&) = default;
     AbstractExpression& operator=(AbstractExpression&&) = delete;
     AbstractExpression();
