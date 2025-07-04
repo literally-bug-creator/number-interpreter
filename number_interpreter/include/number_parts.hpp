@@ -12,7 +12,8 @@ using Digits = std::vector<uint8_t>;
 class NumberParts {
   public:
     explicit NumberParts(const string& sign, const string& beforeDot,
-                         const string& afterDot, const string& exp);
+                         const string& afterDot, const string& exp, bool isInf,
+                         bool isNan);
 
     [[nodiscard]] bool isInf() const;
     [[nodiscard]] bool isNan() const;

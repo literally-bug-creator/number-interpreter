@@ -52,9 +52,11 @@ Digits parseSignificantDigits(const string& beforeDot, const string& afterDot) {
 }  // namespace
 
 NumberParts::NumberParts(const string& sign, const string& beforeDot,
-                         const string& afterDot, const string& exp)
+                         const string& afterDot, const string& exp, bool isInf,
+                         bool isNan)
     : exp_(parseExponent(exp)), isNegative_(parseSign(sign)),
-      significantDigits_(parseSignificantDigits(beforeDot, afterDot)) {}
+      significantDigits_(parseSignificantDigits(beforeDot, afterDot)),
+      isInf_(isInf), isNan_(isNan) {}
 
 bool NumberParts::isInf() const {
     return isInf_;
