@@ -71,7 +71,7 @@ TEST_F(ContextTest, GetFromMiddle) {
 
 TEST_F(ContextTest, GetWithZeroLength) {
     Context context("hello");
-    string expected = "";
+    string expected;
 
     string result = context.get(0);
 
@@ -254,9 +254,9 @@ TEST_F(ContextTest, BackupRestoreAllFields) {
     context.setExp("10");
     context.setIsInf(true);
     context.setIsNan(true);
-    
+
     ContextImage backup = context.backup();
-    
+
     context.next(2);
     context.setSign("+");
     context.setBeforeDot("789");
@@ -264,9 +264,9 @@ TEST_F(ContextTest, BackupRestoreAllFields) {
     context.setExp("5");
     context.setIsInf(false);
     context.setIsNan(false);
-    
+
     context.restore(backup);
-    
+
     string expectedChar = "e";
     bool expectedNegative = true;
     Exponent expectedExponent = 10;
@@ -303,9 +303,9 @@ TEST_F(ContextTest, MultipleSettersOverwrite) {
     context.setSign("+");
     context.setBeforeDot("123");
     context.setBeforeDot("456");
-    
+
     NumberParts parts = context.buildNumberParts();
-    
+
     EXPECT_FALSE(parts.isNegative());
     Digits digits = parts.getSignificantDigits();
     EXPECT_EQ(3, digits.size());
