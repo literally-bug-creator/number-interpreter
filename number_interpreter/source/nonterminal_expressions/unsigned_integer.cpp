@@ -1,29 +1,32 @@
 #include "nonterminal_expressions/unsigned_integer.hpp"
 
+#include "contants.hpp"
 #include "context.hpp"
 #include "nonterminal_expressions/digit.hpp"
 #include "terminal_expressions/non_zero_digit.hpp"
 #include "terminal_expressions/zero.hpp"
 
 namespace number_interpreter {
+namespace {
+constexpr ZeroExpression ZERO_EXPR = ZeroExpression();
+constexpr DigitExpression DIGIT_EXPR = DigitExpression();
+constexpr NonZeroDigitExpression NON_ZERO_DIGIT_EXPR = NonZeroDigitExpression();
+}  // namespace
 Token UnsignedIntegerExpression::interpret(Context& ctx) const {
-    static ZeroExpression zeroExpr = ZeroExpression();
-    static DigitExpression digitExpr = DigitExpression();
-    static NonZeroDigitExpression nonZeroDigitExpr = NonZeroDigitExpression();
     ContextImage img = ctx.backup();
-    Token zero = zeroExpr.interpret(ctx);
+    Token zero = ZERO_EXPR.interpret(ctx);
     if (!zero.isEmpty()) {
         return zero;
     }
-    Token integer = nonZeroDigitExpr.interpret(ctx);
+    Token integer = NON_ZERO_DIGIT_EXPR.interpret(ctx);
     if (integer.isEmpty()) {
         ctx.restore(img);
-        return Token("");
+        return getEmptyToken();
     }
-    Token digit = digitExpr.interpret(ctx);
+    Token digit = DIGIT_EXPR.interpret(ctx);
     while (!digit.isEmpty()) {
         integer = integer.merge(digit);
-        digit = digitExpr.interpret(ctx);
+        digit = DIGIT_EXPR.interpret(ctx);
     }
     return integer;
 }

@@ -7,7 +7,7 @@ using namespace number_interpreter;
 class TokenTest : public ::testing::Test {};
 
 TEST_F(TokenTest, EmptyTokenIsEmpty) {
-    Token token("");
+    Token token = Token("");
     bool expected = true;
 
     bool result = token.isEmpty();
@@ -25,7 +25,7 @@ TEST_F(TokenTest, NonEmptyTokenIsNotEmpty) {
 }
 
 TEST_F(TokenTest, GetValueReturnsEmptyString) {
-    Token token("");
+    Token token = Token("");
     string expected;
 
     string result = token.getValue();

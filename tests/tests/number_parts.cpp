@@ -51,7 +51,28 @@ TEST_F(NumberPartsTest, InvalidSignIsPositive) {
 
 TEST_F(NumberPartsTest, MultipleSignsIgnored) {
     NumberParts parts("--", "123", "", "", false, false);
+    bool expected = true;
+
+    EXPECT_EQ(expected, parts.isNegative());
+}
+
+TEST_F(NumberPartsTest, SignInBeforeDotNegative) {
+    NumberParts parts("", "-123", "", "", false, false);
+    bool expected = true;
+
+    EXPECT_EQ(expected, parts.isNegative());
+}
+
+TEST_F(NumberPartsTest, SignInBeforeDotPositive) {
+    NumberParts parts("", "+123", "", "", false, false);
     bool expected = false;
+
+    EXPECT_EQ(expected, parts.isNegative());
+}
+
+TEST_F(NumberPartsTest, SignParameterOverridesBeforeDot) {
+    NumberParts parts("-", "+123", "", "", false, false);
+    bool expected = true;
 
     EXPECT_EQ(expected, parts.isNegative());
 }
@@ -137,8 +158,50 @@ TEST_F(NumberPartsTest, ExponentWithMixedInvalidChars) {
     EXPECT_EQ(expected, exp);
 }
 
+TEST_F(NumberPartsTest, ExponentWithLowerCaseE) {
+    NumberParts parts("", "123", "456", "e10", false, false);
+    Exponent expected = 10;
+
+    Exponent exp = parts.getExponent();
+
+    EXPECT_EQ(expected, exp);
+}
+
+TEST_F(NumberPartsTest, ExponentWithUpperCaseE) {
+    NumberParts parts("", "123", "456", "E10", false, false);
+    Exponent expected = 10;
+
+    Exponent exp = parts.getExponent();
+
+    EXPECT_EQ(expected, exp);
+}
+
+TEST_F(NumberPartsTest, ExponentWithJustE) {
+    NumberParts parts("", "123", "456", "e", false, false);
+    Exponent expected = 0;
+
+    Exponent exp = parts.getExponent();
+
+    EXPECT_EQ(expected, exp);
+}
+
 TEST_F(NumberPartsTest, BeforeDotDigitsParsed) {
     NumberParts parts("", "123", "", "", false, false);
+    size_t expectedSize = 3;
+    uint8_t expectedFirst = 1;
+    uint8_t expectedSecond = 2;
+    uint8_t expectedThird = 3;
+
+    Digits digits = parts.getSignificantDigits();
+
+    EXPECT_EQ(expectedSize, digits.size());
+    EXPECT_EQ(expectedFirst, digits[0]);
+    EXPECT_EQ(expectedSecond, digits[1]);
+    EXPECT_EQ(expectedThird, digits[2]);
+}
+
+TEST_F(NumberPartsTest, BeforeDotDigitsWithSign) {
+    NumberParts parts("", "-123", "", "", false, false);
     size_t expectedSize = 3;
     uint8_t expectedFirst = 1;
     uint8_t expectedSecond = 2;
@@ -167,8 +230,36 @@ TEST_F(NumberPartsTest, AfterDotDigitsParsed) {
     EXPECT_EQ(expectedThird, digits[2]);
 }
 
+TEST_F(NumberPartsTest, AfterDotDigitsWithDot) {
+    NumberParts parts("", "", ".456", "", false, false);
+    size_t expectedSize = 3;
+    uint8_t expectedFirst = 4;
+    uint8_t expectedSecond = 5;
+    uint8_t expectedThird = 6;
+
+    Digits digits = parts.getSignificantDigits();
+
+    EXPECT_EQ(expectedSize, digits.size());
+    EXPECT_EQ(expectedFirst, digits[0]);
+    EXPECT_EQ(expectedSecond, digits[1]);
+    EXPECT_EQ(expectedThird, digits[2]);
+}
+
 TEST_F(NumberPartsTest, AllDigitsCombined) {
     NumberParts parts("", "123", "456", "", false, false);
+    size_t expectedSize = 6;
+    std::vector<uint8_t> expectedDigits = {1, 2, 3, 4, 5, 6};
+
+    Digits digits = parts.getSignificantDigits();
+
+    EXPECT_EQ(expectedSize, digits.size());
+    for (size_t i = 0; i < expectedSize; ++i) {
+        EXPECT_EQ(expectedDigits[i], digits[i]);
+    }
+}
+
+TEST_F(NumberPartsTest, AllDigitsCombinedWithSignAndDot) {
+    NumberParts parts("", "+123", ".456", "", false, false);
     size_t expectedSize = 6;
     std::vector<uint8_t> expectedDigits = {1, 2, 3, 4, 5, 6};
 
@@ -214,6 +305,15 @@ TEST_F(NumberPartsTest, OnlyAfterDotInvalid) {
     Digits digits = parts.getSignificantDigits();
 
     EXPECT_EQ(expectedEmpty, digits.empty());
+}
+
+TEST_F(NumberPartsTest, InvalidDigitsWithSignAndDot) {
+    NumberParts parts("", "-1a2b", ".3c4d", "", false, false);
+    size_t expectedSize = 0;
+
+    Digits digits = parts.getSignificantDigits();
+
+    EXPECT_EQ(expectedSize, digits.size());
 }
 
 TEST_F(NumberPartsTest, ZeroDigitsParsed) {
@@ -342,4 +442,70 @@ TEST_F(NumberPartsTest, IsNanWhenNotSet) {
     bool result = parts.isNan();
 
     EXPECT_EQ(expected, result);
+}
+
+TEST_F(NumberPartsTest, ComplexCombinationWithAllFeatures) {
+    NumberParts parts("", "-123", ".456", "e789", false, false);
+    bool expectedNegative = true;
+    Exponent expectedExponent = 789;
+    size_t expectedSize = 6;
+    std::vector<uint8_t> expectedDigits = {1, 2, 3, 4, 5, 6};
+
+    EXPECT_EQ(expectedNegative, parts.isNegative());
+    EXPECT_EQ(expectedExponent, parts.getExponent());
+
+    Digits digits = parts.getSignificantDigits();
+    EXPECT_EQ(expectedSize, digits.size());
+    for (size_t i = 0; i < expectedSize; ++i) {
+        EXPECT_EQ(expectedDigits[i], digits[i]);
+    }
+}
+
+TEST_F(NumberPartsTest, ExponentWithInvalidCharAfterE) {
+    NumberParts parts("", "123", "", "eabc", false, false);
+    Exponent expected = 0;
+
+    Exponent exp = parts.getExponent();
+
+    EXPECT_EQ(expected, exp);
+}
+
+TEST_F(NumberPartsTest, AfterDotWithOnlyDot) {
+    NumberParts parts("", "", ".", "", false, false);
+    bool expectedEmpty = true;
+
+    Digits digits = parts.getSignificantDigits();
+
+    EXPECT_EQ(expectedEmpty, digits.empty());
+}
+
+TEST_F(NumberPartsTest, BeforeDotWithOnlySign) {
+    NumberParts parts("", "-", "", "", false, false);
+    bool expectedEmpty = true;
+    bool expectedNegative = true;
+
+    Digits digits = parts.getSignificantDigits();
+
+    EXPECT_EQ(expectedEmpty, digits.empty());
+    EXPECT_EQ(expectedNegative, parts.isNegative());
+}
+
+TEST_F(NumberPartsTest, EmptyStringHandling) {
+    NumberParts parts("", "", "", "", false, false);
+    bool expectedNegative = false;
+    Exponent expectedExponent = 0;
+    bool expectedEmpty = true;
+
+    EXPECT_EQ(expectedNegative, parts.isNegative());
+    EXPECT_EQ(expectedExponent, parts.getExponent());
+    EXPECT_EQ(expectedEmpty, parts.getSignificantDigits().empty());
+}
+
+TEST_F(NumberPartsTest, ExponentWithMixedCase) {
+    NumberParts parts("", "123", "", "E123", false, false);
+    Exponent expected = 123;
+
+    Exponent exp = parts.getExponent();
+
+    EXPECT_EQ(expected, exp);
 }

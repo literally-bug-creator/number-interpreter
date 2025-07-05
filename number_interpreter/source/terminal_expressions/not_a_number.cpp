@@ -2,24 +2,15 @@
 
 #include <string>
 
-#include "exceptions.hpp"
-
 using std::string;
 
 namespace number_interpreter {
-Token NotANumberExpression::interpret(Context& ctx) const {
-    static const string EMPTY_STR;
-    static const string NAN = "nan";
-    string token;
-    try {
-        token = ctx.get(NAN.length());
-    } catch (const OutOfRangeException&) {
-        return Token(EMPTY_STR);
-    }
-    if (token == NAN) {
-        ctx.next(NAN.length());
-        return Token(NAN);
-    }
-    return Token(EMPTY_STR);
+const array<string, MAX_TOKENS>& NotANumberExpression::getTokens() const {
+    static constexpr array<string, MAX_TOKENS> TOKENS = {"nan"};
+    return TOKENS;
+}
+
+uint8_t NotANumberExpression::getMaxTokenLength() const {
+    return 3;
 }
 }  // namespace number_interpreter

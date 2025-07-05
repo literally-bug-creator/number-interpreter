@@ -7,7 +7,35 @@
 namespace number_interpreter {
 namespace {
 bool parseSign(const string& str) {
-    return !str.empty() && str == "-";
+    return !str.empty() && str.front() == '-';
+}
+
+string extractSignFromBeforeDot(const string& str) {
+    if (!str.empty() && (str.front() == '-' || str.front() == '+')) {
+        return str.substr(0, 1);
+    }
+    return "";
+}
+
+string removeSignFromBeforeDot(const string& str) {
+    if (!str.empty() && (str.front() == '-' || str.front() == '+')) {
+        return str.substr(1);
+    }
+    return str;
+}
+
+string removeDotFromAfterDot(const string& str) {
+    if (!str.empty() && str.front() == '.') {
+        return str.substr(1);
+    }
+    return str;
+}
+
+string removeExpFromExponent(const string& str) {
+    if (!str.empty() && (str.front() == 'e' || str.front() == 'E')) {
+        return str.substr(1);
+    }
+    return str;
 }
 
 Digits parseDigitString(const string& str) {
@@ -23,22 +51,26 @@ Digits parseDigitString(const string& str) {
 }
 
 Exponent parseExponent(const string& str) {
-    if (str.empty() || !std::ranges::all_of(str, [](char letter) {
+    string cleanStr = removeExpFromExponent(str);
+    if (cleanStr.empty() || !std::ranges::all_of(cleanStr, [](char letter) {
             return std::isdigit(letter) != 0;
         })) {
         return 0;
     }
-    return std::stoull(str);
+    return std::stoull(cleanStr);
 }
 
 Digits parseSignificantDigits(const string& beforeDot, const string& afterDot) {
-    Digits beforeDigits = parseDigitString(beforeDot);
-    if (beforeDigits.empty() && !beforeDot.empty()) {
+    string cleanBeforeDot = removeSignFromBeforeDot(beforeDot);
+    string cleanAfterDot = removeDotFromAfterDot(afterDot);
+
+    Digits beforeDigits = parseDigitString(cleanBeforeDot);
+    if (beforeDigits.empty() && !cleanBeforeDot.empty()) {
         return {};
     }
 
-    Digits afterDigits = parseDigitString(afterDot);
-    if (afterDigits.empty() && !afterDot.empty()) {
+    Digits afterDigits = parseDigitString(cleanAfterDot);
+    if (afterDigits.empty() && !cleanAfterDot.empty()) {
         return {};
     }
 
@@ -54,7 +86,9 @@ Digits parseSignificantDigits(const string& beforeDot, const string& afterDot) {
 NumberParts::NumberParts(const string& sign, const string& beforeDot,
                          const string& afterDot, const string& exp, bool isInf,
                          bool isNan)
-    : exp_(parseExponent(exp)), isNegative_(parseSign(sign)),
+    : exp_(parseExponent(exp)),
+      isNegative_(
+          parseSign(sign.empty() ? extractSignFromBeforeDot(beforeDot) : sign)),
       significantDigits_(parseSignificantDigits(beforeDot, afterDot)),
       isInf_(isInf), isNan_(isNan) {}
 

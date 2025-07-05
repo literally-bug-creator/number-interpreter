@@ -2,24 +2,15 @@
 
 #include <string>
 
-#include "exceptions.hpp"
-
 using std::string;
 
 namespace number_interpreter {
-Token ExpExpression::interpret(Context& ctx) const {
-    static const string EMPTY_STR;
-    static const string EXP = "e";
-    string token;
-    try {
-        token = ctx.get(EXP.length());
-    } catch (const OutOfRangeException&) {
-        return Token(EMPTY_STR);
-    }
-    if (token == EXP) {
-        ctx.next(EXP.length());
-        return Token(EXP);
-    }
-    return Token(EMPTY_STR);
+const array<string, MAX_TOKENS>& ExpExpression::getTokens() const {
+    static constexpr array<string, MAX_TOKENS> TOKENS = {"e"};
+    return TOKENS;
+}
+
+uint8_t ExpExpression::getMaxTokenLength() const {
+    return 1;
 }
 }  // namespace number_interpreter

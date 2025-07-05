@@ -28,6 +28,6 @@ class AbstractExpression {
     AbstractExpression& operator=(const AbstractExpression&) = default;
     AbstractExpression& operator=(AbstractExpression&&) = default;
     virtual ~AbstractExpression() = default;
-    [[nodiscard]] virtual Token interpret(Context& context) const = 0;
+    [[nodiscard]] virtual Token interpret(Context& ctx) const = 0;
 };
 }  // namespace number_interpreter
