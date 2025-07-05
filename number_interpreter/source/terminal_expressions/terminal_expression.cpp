@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "contants.hpp"
 #include "exceptions.hpp"
 
 using std::string;
@@ -14,7 +15,7 @@ Token TerminalExpression::interpret(Context& ctx) const {
     try {
         token = ctx.get(getMaxTokenLength());
     } catch (const OutOfRangeException&) {
-        return Token(EMPTY_STR);
+        return getEmptyToken();
     }
     const auto& tokenArray = getTokens();
     const auto* findIterator =
@@ -23,6 +24,6 @@ Token TerminalExpression::interpret(Context& ctx) const {
         ctx.next(token.length());
         return Token(*findIterator);
     }
-    return Token(EMPTY_STR);
+    return getEmptyToken();
 }
 }  // namespace number_interpreter

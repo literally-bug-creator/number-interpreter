@@ -1,23 +1,26 @@
 #include "nonterminal_expressions/decimal.hpp"
 
+#include "contants.hpp"
 #include "context.hpp"
 #include "nonterminal_expressions/exponent.hpp"
 #include "nonterminal_expressions/fractional_part.hpp"
 #include "nonterminal_expressions/signed_integer.hpp"
 
 namespace number_interpreter {
+namespace {
+constexpr ExponentExpression EXP_EXPR = ExponentExpression();
+constexpr SignedIntegerExpression INT_EXPR = SignedIntegerExpression();
+constexpr FractionalPartExpression FRACT_EXPR = FractionalPartExpression();
+}  // namespace
 Token DecimalExpression::interpret(Context& ctx) const {
-    static ExponentExpression expExpr = ExponentExpression();
-    static SignedIntegerExpression intExpr = SignedIntegerExpression();
-    static FractionalPartExpression fractExpr = FractionalPartExpression();
     ContextImage img = ctx.backup();
-    Token integer = intExpr.interpret(ctx);
+    Token integer = INT_EXPR.interpret(ctx);
     if (integer.isEmpty()) {
         ctx.restore(img);
-        return Token("");
+        return getEmptyToken();
     }
-    Token fractionalPart = fractExpr.interpret(ctx);
-    Token exponent = expExpr.interpret(ctx);
+    Token fractionalPart = FRACT_EXPR.interpret(ctx);
+    Token exponent = EXP_EXPR.interpret(ctx);
     return (integer.merge(fractionalPart)).merge(exponent);
 }
 }  // namespace number_interpreter

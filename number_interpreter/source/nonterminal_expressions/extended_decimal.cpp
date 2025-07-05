@@ -1,23 +1,26 @@
 #include "nonterminal_expressions/extended_decimal.hpp"
 
+#include "contants.hpp"
 #include "context.hpp"
 #include "nonterminal_expressions/decimal.hpp"
 #include "nonterminal_expressions/special.hpp"
 
 namespace number_interpreter {
+namespace {
+constexpr DecimalExpression DECIMAL_EXPR = DecimalExpression();
+constexpr SpecialExpression SPECIAL_EXPR = SpecialExpression();
+}  // namespace
 Token ExtendedDecimalExpression::interpret(Context& ctx) const {
-    static DecimalExpression decimalExpr = DecimalExpression();
-    static SpecialExpression specialExpr = SpecialExpression();
     ContextImage img = ctx.backup();
-    Token special = specialExpr.interpret(ctx);
+    Token special = SPECIAL_EXPR.interpret(ctx);
     if (!special.isEmpty()) {
         return special;
     }
-    Token decimal = decimalExpr.interpret(ctx);
+    Token decimal = DECIMAL_EXPR.interpret(ctx);
     if (!decimal.isEmpty()) {
         return decimal;
     }
     ctx.restore(img);
-    return Token("");
+    return getEmptyToken();
 }
 }  // namespace number_interpreter

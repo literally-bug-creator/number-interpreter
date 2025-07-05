@@ -1,28 +1,31 @@
 #include "nonterminal_expressions/fractional_part.hpp"
 
+#include "contants.hpp"
 #include "context.hpp"
 #include "nonterminal_expressions/digit.hpp"
 #include "terminal_expressions/dot.hpp"
 
 namespace number_interpreter {
+namespace {
+constexpr DigitExpression DIGIT_EXPR = DigitExpression();
+constexpr DotExpression DOT_EXPR = DotExpression();
+}  // namespace
 Token FractionalPartExpression::interpret(Context& ctx) const {
-    static DigitExpression digitExpr = DigitExpression();
-    static DotExpression dotExpr = DotExpression();
     ContextImage img = ctx.backup();
-    Token dot = dotExpr.interpret(ctx);
+    Token dot = DOT_EXPR.interpret(ctx);
     if (dot.isEmpty()) {
         ctx.restore(img);
-        return Token("");
+        return getEmptyToken();
     }
-    Token fractionalPart = digitExpr.interpret(ctx);
+    Token fractionalPart = DIGIT_EXPR.interpret(ctx);
     if (fractionalPart.isEmpty()) {
         ctx.restore(img);
-        return Token("");
+        return getEmptyToken();
     }
-    Token nextDigit = digitExpr.interpret(ctx);
+    Token nextDigit = DIGIT_EXPR.interpret(ctx);
     while (!nextDigit.isEmpty()) {
         fractionalPart = fractionalPart.merge(nextDigit);
-        nextDigit = digitExpr.interpret(ctx);
+        nextDigit = DIGIT_EXPR.interpret(ctx);
     }
     return dot.merge(fractionalPart);
 }
