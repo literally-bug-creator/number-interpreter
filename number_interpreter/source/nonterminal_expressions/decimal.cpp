@@ -21,6 +21,9 @@ Token DecimalExpression::interpret(Context& ctx) const {
     }
     Token fractionalPart = FRACT_EXPR.interpret(ctx);
     Token exponent = EXP_EXPR.interpret(ctx);
+    ctx.setBeforeDot(integer.getValue());
+    ctx.setAfterDot(fractionalPart.getValue());
+    ctx.setExp(exponent.getValue());
     return (integer.merge(fractionalPart)).merge(exponent);
 }
 }  // namespace number_interpreter
