@@ -2,24 +2,15 @@
 
 #include <string>
 
-#include "exceptions.hpp"
-
 using std::string;
 
 namespace number_interpreter {
-Token InfinityExpression::interpret(Context& ctx) const {
-    static const string EMPTY_STR;
-    static const string INF = "inf";
-    string token;
-    try {
-        token = ctx.get(INF.length());
-    } catch (const OutOfRangeException&) {
-        return Token(EMPTY_STR);
-    }
-    if (token == INF) {
-        ctx.next(INF.length());
-        return Token(INF);
-    }
-    return Token(EMPTY_STR);
+const array<string, MAX_TOKENS>& InfinityExpression::getTokens() const {
+    static constexpr array<string, MAX_TOKENS> TOKENS = {"inf"};
+    return TOKENS;
+}
+
+uint8_t InfinityExpression::getMaxTokenLength() const {
+    return 3;
 }
 }  // namespace number_interpreter

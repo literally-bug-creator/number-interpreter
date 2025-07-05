@@ -2,24 +2,15 @@
 
 #include <string>
 
-#include "exceptions.hpp"
-
 using std::string;
 
 namespace number_interpreter {
-Token ZeroExpression::interpret(Context& ctx) const {
-    static const string EMPTY_STR;
-    static const string ZERO = "0";
-    string token;
-    try {
-        token = ctx.get(ZERO.length());
-    } catch (const OutOfRangeException&) {
-        return Token(EMPTY_STR);
-    }
-    if (token == ZERO) {
-        ctx.next(ZERO.length());
-        return Token(ZERO);
-    }
-    return Token(EMPTY_STR);
+const array<string, MAX_TOKENS>& ZeroExpression::getTokens() const {
+    static constexpr array<string, MAX_TOKENS> TOKENS = {"0"};
+    return TOKENS;
+}
+
+uint8_t ZeroExpression::getMaxTokenLength() const {
+    return 1;
 }
 }  // namespace number_interpreter

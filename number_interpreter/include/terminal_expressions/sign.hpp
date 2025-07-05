@@ -1,10 +1,11 @@
 #pragma once
 
-#include "abstract_expression.hpp"
+#include "terminal_expression.hpp"
 
 namespace number_interpreter {
-class SignExpression : public AbstractExpression {
-  public:
-    Token interpret(Context& ctx) const override;
+class SignExpression : public TerminalExpression {
+  protected:
+    [[nodiscard]] const array<string, MAX_TOKENS>& getTokens() const override;
+    [[nodiscard]] uint8_t getMaxTokenLength() const override;
 };
 }  // namespace number_interpreter
